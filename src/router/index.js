@@ -1,25 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-//使用路由，这个页面主要就是分发路由
 Vue.use(Router)
 
-const router = new Router({   //创建router实例，然后传递配置参数，将这个对象传入vue实例中
-  mode: 'hash',//使用hash模式，在URL路径中会有一个#号，只是在当前页面中跳转
+const router = new Router({  
+  mode: 'hash',
   base: process.env.BASE_URL,
-  routes: [   //routers是路由匹配规则，在每一个匹配规则中，都必须有两个参数，一个是path，用来监听哪个路由监听规则，另一个是component，表示如果路由是前面匹配到的path，就展示对应的组件
+  routes: [ 
     {
-      path: '/',   //监听哪个路由连接
-      redirect:'/home',//重定向的位置，一登录就进入该页面，当在URL中输入/时，就进入home组件中
+      path: '/',   
+      redirect:'/home',
     },
     {
       path: '/',
       component: resolve => require(['../components/common/home.vue'], resolve),
-      // meta: { title: '无人机管理', requiresAuth:true },//在需要的权限的路由添加meta信息，表明该路由需要登录才能访问
-      children:[//是子路由，所有的页面都含有导航部分，即'../components/common/home.vue',嵌套路由
+      children:[
         {
           path: 'home',
-          component: resolve=>require(['../components/views/index/index.vue'],resolve),//懒加载，将你的component分别打包成不同的js,加载的时候按需加载,访问此路由的时候，才会加载这个js文件
+          component: resolve=>require(['../components/views/index/index.vue'],resolve),
           meta:{
             title: '首页',
             //requiresAuth: true//这个路由引发的页面需要登录之后才可以进入,把权限设置在meta上，为了更方便的从router.beforeEch中进行权限判断
@@ -33,22 +31,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
             // requiresAuth: true
           },
         },
-        {
-          path:'floor',
-          component: resolve=>require(['../components/views/base-info/floor/floor.vue'],resolve),
-          meta:{
-            title:'楼层货区',
-            // requiresAuth:true
-          }
-        },
-        // {
-        //   path:'classification',
-        //   component: resolve=>require(['../components/views/base-info/classification/classification.vue'],resolve),
-        //   meta:{
-        //     title:'商位分类',
-        //     // requiresAuth:true
-        //   }
-        // },
         {
           path:'supplier',
           component: resolve=>require(['../components/views/base-info/supplier/supplier.vue'],resolve),
@@ -143,15 +125,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
             // requiresAuth: true
           }
         },
-
-        // {
-        //   path: '/cost',
-        //   component: resolve=>require(['../components/views/costCenter/solidMoney/cost.vue'], resolve),
-        //   meta:{
-        //     title:'费用中心',
-        //     // requiresAuth: true
-        //   }
-        // },
         {
           path: '/cost1',
           component: resolve=>require(['../components/views/costCenter/solidMoney/cost.vue'], resolve),
@@ -186,14 +159,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
           }
         },
         {
-          path: '/statistic1',
-          component: resolve=>require(['../components/views/statistic/statisticMessage.vue'], resolve),
-          meta:{
-            title:'报表中心',
-            // requiresAuth: true
-          }
-        },
-        {
           path: '/role',
           component: resolve=>require(['../components/views/system/role.vue'], resolve),
           meta:{
@@ -222,27 +187,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
             title:'管理员设置',
             // requiresAuth: true
           }
-        },{
-          path: '/wechat-index',
-          component: resolve=>require(['../components/views/wechat/wechat-index.vue'], resolve),
-          meta:{
-            title:'微信主页',
-            // requiresAuth: true
-          }
-        },{
-          path: '/wechat-depatment',
-          component: resolve=>require(['../components/views/wechat/wechat-param.vue'], resolve),
-          meta:{
-            title:'微信部门',
-            // requiresAuth: true
-          }
-        },{
-          path: '/wechat-lable',
-          component: resolve=>require(['../components/views/wechat/wechatAble.vue'], resolve),
-          meta:{
-            title:'微信标签',
-            // requiresAuth: true
-          }
         },
         {
           path: '/wechat-manage',
@@ -260,15 +204,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
             // requiresAuth: true
           }
         },
-        {
-          path: '/wechatInfo',
-          component: resolve=>require(['../components/views/wechat/wechatInfo.vue'], resolve),
-          meta:{
-            title:'微信成员详情',
-            // requiresAuth: true
-          }
-        }
-
       ]
     },
     {
@@ -278,12 +213,6 @@ const router = new Router({   //创建router实例，然后传递配置参数，
   ]
 })
 
-
-//使用router.beforeEach注册一个全局前置守卫，判断用户是否登录
-//前置路由守卫判断目标路由是否携带相关meta信息以及token是否存在
-//to,即将要进入的目标路由对象
-//from当前导航正要离开的路由
-//next一定要调用该方法来resolve这个钩子，
 router.beforeEach((to, from, next)=>{
   let token = window.localStorage.getItem('Authorization')
   //requireAuth为路由中定义的 meta:{requireAuth:true}

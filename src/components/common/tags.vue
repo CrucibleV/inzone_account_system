@@ -39,14 +39,6 @@
                     this.$router.push('/');
                 }
             },
-
-
-
-
-
-
-
-
             // 关闭全部标签
             closeAll(){
                 this.tagsList = [];
@@ -107,9 +99,6 @@
                 }
                 this.fullscreen = !this.fullscreen;
             }
-
-
-
         },
         computed: {
             showTags() {
@@ -132,7 +121,7 @@
     .tags {
       margin-top: 0px;
         position: relative;
-        height: 40px;
+        height: 30px;
         overflow: hidden;
         background: #EFEFEF;
         padding-right: 120px;
@@ -152,8 +141,8 @@
         font-size: 12px;
         overflow: hidden;
         cursor: pointer;
-        height: 40px;
-        line-height: 40px;
+        height: 23px;
+        line-height: 23px;
         border: 1px solid #e9eaec;
         background: #fff;
         padding: 0 5px 0 12px;
