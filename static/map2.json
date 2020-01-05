@@ -1,0 +1,44 @@
+{
+	"items": [
+		{
+			"type": "PolygonItem",
+			"id": 1,
+			"locked": false,
+			"sem": {
+				"label": "测试区",
+				"show": true,
+				"tags": [
+					"测试蓝色"
+				],
+				"dx": 0,
+				"dy": 0,
+				"fontSize": 20
+			},
+			"points": [
+				{
+					"x": 302,
+					"y": 234
+				},
+				{
+					"x": 587,
+					"y": 234
+				},
+				{
+					"x": 587,
+					"y": 393
+				},
+				{
+					"x": 302,
+					"y": 393
+				}
+			],
+			"stroke": "#999999",
+			"strokeWidth": 2,
+			"opacity": 1,
+			"fill": "#4169E1"
+		}
+	],
+	"zlist": [
+		1
+	]
+}

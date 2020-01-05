@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <title>平面图阅览器</title>
+  <script type="text/javascript" src="third-party/jquery-1.8.2.min.js"></script>
+  <script src="third-party/layui-v2.5.4/layui.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="third-party/layui-v2.5.4/css/layui.css"  media="all">
+  <style>
+            div.floatCtro{ width:30px; height:350px; position: absolute; left:15px; top:70px; z-index:100}
+            div.floatCtro p{width:50px; text-align:center; height:40px; line-height:35px; font-weight:bold;font-family:'微软雅黑'; font-size:17px; color:#676767; margin:0; padding:0; cursor:pointer; background:#fff;}
+            div.floatCtro a{ display:inline-block; display:none; width:60px; height:60px; margin:10px 0 0 0; background:#fff; color:#000;  vertical-align:middle; cursor:pointer;}
+            div.floatCtro a span{ display:block; width:28px; height:44px; line-height:22px;  font-family:'微软雅黑'; font-size:14px; line-height:22px; text-align:center; margin:8px 16px; _margin:-10px 0 0 16px;}
+            div.floatCtro a:hover{ background:#000; color:#fff; zoom:1;}
+            div.floatCtro p:hover{ background:#87CEFA; color:#fff;}
+            div.floatCtro p.cur{ background:#c40000; color:#fff;}
+    .layui-tab-card{
+      width: 300px;
+      height: 400px;
+    }
+  </style>
+  <script>
+      $(document).ready(function(){
+          getData();
+      });
+  </script>
+</head>
+
+<body>
+
+<!-- SVG图形显示区域 -->
+<div id="container" ></div>
+
+<!-- 右侧信息框 -->
+<div style="position:absolute; right: 0px; top: 0px; background: white;"  class="layui-tab layui-tab-card">
+  <ul class="layui-tab-title">
+  <li class="layui-this">基本信息</li>
+  <li>历史合同</li>
+  </ul>
+  <div class="layui-tab-content" style="width: 300px;">
+  <div class="layui-tab-item layui-show">
+      <table class="layui-table">
+      <colgroup>
+      <col width="80" style="text-align:center;">
+      <col width="150">
+      </colgroup>
+      <tbody>
+        <tr>
+        <td colspan="2" color="white" bgcolor="#1b3367" style="height:20px; color:#ffffff; font-size:12px;" align='center' valian='middle'>商位信息</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">商位编号</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">[000502060033]005-0-F2-036</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">商位类型</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">固定商铺</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">商位状态</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">已出租</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">计租面积</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">55平方米</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">租户</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">04346济南市天桥区白鹤旗舰暖气行</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">品类</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">[17049905]散热器</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">品牌</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">[5742]南山，[593]金旗舰</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">合同号</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">C043460002</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb; ">有效期</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">2013-10-18,2020-03-31</td>
+      </tr>
+      <tr>
+        <td colspan="2" bgcolor="#1b3367" style="height:30px; color:#ffffff; font-size:16px;" align='center' valian='middle'>租金情况</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">租金水平</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">106,397.50元</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">年租金总额</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">116,435.00元</td>
+      </tr>
+      <tr>
+        <td colspan="2" color="white" bgcolor="#1b3367" style="height:30px; color:#ffffff; font-size:16px;" align='center' valian='middle'>销售收入</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">昨日销售</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">8,162.00元</td>
+      </tr>
+      <tr>
+        <td style="color:#ffffff;background:#396ddb;">本年销售</td>
+        <td style="color:#ffffff;background:#3c7ce0; ">2,266,000.00元</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="layui-tab-item">历史合同年租金总额及租金水平</div>
+
+  </div>
+</div>
+
+<!-- 导航栏 -->
+<div class="floatCtro" id = "floatMenu">
+</div>
+
+<script type="text/javascript" src="mapGenerate.js"></script></body>
+<script  charset="utf-8">
+
+
+
+    var clickFill = "#f4ceb1";//设置点击变化颜色
+var jsonPath = ["map1.json","map1.json","map1.json","map1.json","map1.json"];//单/多个JSON文件地址,按照楼层顺序排列
+
+var shopid=0;
+
+var str='';
+function getData() {
+    // console.log('getData');
+
+    $.ajax({
+            url:"http://49.232.8.138:8667/shop/getMap",//在前面加上http
+            type:"GET",
+            dataType:"json",
+            asyn:true,
+            data:{shopid:1001,floor:1,building:0},
+            success:function(data){
+                str=data;
+                // console.log("str:"+str)
+                console.log("成功")
+            },
+            error: function(e){
+                console.log("error")
+                console.log(e);
+            }
+        }
+
+    )
+}
+
+function loadJson(jsonPath)//加载地图
+{
+ $.getJSON(jsonPath, function (data){//先获取JSON文件的内容，再传入地图生成器。实现访问同步
+	   startup(data);//回调函数执行
+     })
+}
+
+// setTimeout(function configAttr(){//设置图元变色效果 需要设置延时 待图元加载完毕后再执行
+
+// 	var typeB = ['15','18','25'];
+// 	var typeC = ['37','16','31'];
+
+// 	 for( i in typeB)
+// 		 document.getElementById(typeB[i]).setAttribute("fill","#BF3EFF");
+// 	for(j in typeC)
+// 		 document.getElementById(typeC[j]).setAttribute("fill","#FF4040");
+
+// },5000);
+
+var lastid = 9999;
+var lastfill = "null";
+function showItemId(id){//图元点击变色&响应事件
+	if(lastid == 9999)
+	  {
+		lastfill = document.getElementById(id).getAttribute("fill");//颜色
+		document.getElementById(id).setAttribute("fill",lastfill);
+		lastid = id;
+	  }
+	  else{
+		// document.getElementById(lastid).setAttribute("fill",lastfill);
+		lastfill = document.getElementById(lastid).getAttribute("fill");
+		document.getElementById(id).setAttribute("fill",lastfill);
+		lastid = id;
+	  }
+	console.log(id);
+}
+
+
+$(function()//加载侧边导航栏
+{
+   var floatMenuStr = "";
+   for (i in jsonPath)
+   {
+      i == 0 ? floatMenuStr += " <p class='cur'  onclick = 'changeMap(" + (i++) + ")'>F" + i + "</p>" : floatMenuStr += " <p class=''  onclick = 'changeMap(" + (i++) + ")'>F" + i + "</p>";
+
+   }
+   //console.log(floatMenuStr);
+   document.getElementById("floatMenu").innerHTML = floatMenuStr;
+   loadJson(jsonPath[0]);
+}
+);
+
+function changeMap(index)//侧边导航点击效果
+			{
+			    var fixRight = $('div.floatCtro p');//获取div.floatCtro p的元素
+		        fixRight.removeClass('cur');//移除cur类
+				fixRight.eq(index).addClass('cur');
+				startup(jsonPath[index]);
+			    $.getJSON(jsonPath[index], function (data){//先获取JSON，再传入地图生成器。点击几楼就显示几楼的区域
+                       //console.log(JSON.stringify(data));
+	                   startup(data);
+                       })
+			}
+
+function hehetest(){
+
+	alert("hehe");
+}
+
+</script>
+
+
+</html>
