@@ -62,6 +62,9 @@
                             },{
                                 index:'supplier',
                                 title:'供应商管理'
+                            },{
+                                index:'moneyJuan',
+                                title:'劵扣管理'
                             }
                         ]
                     },
@@ -76,9 +79,6 @@
                             },{
                                 index:'moneySear',
                                 title:'返款审核'
-                            },{
-                                index:'moneyJuan',
-                                title:'劵扣管理'
                             }
                         ]
                     },
