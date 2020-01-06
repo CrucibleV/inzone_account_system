@@ -102,6 +102,13 @@ const router = new Router({
             // requiresAuth: true
           }
         },{
+          path: 'moneySearHistory',
+          component: resolve=>require(['../components/views/money/moneySear/moneySearHistory.vue'], resolve),
+          meta:{
+            title:'返款审核历史',
+            // requiresAuth: true
+          }
+        },{
           path: 'moneyJuan',
           component: resolve=>require(['../components/views/money/moneyJuan/moneyJuan.vue'], resolve),
           meta:{

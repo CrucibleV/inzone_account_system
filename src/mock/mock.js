@@ -142,7 +142,7 @@ function addMoney(){
   return Mock.mock({
     'code':'0',
     'mes':'成功',
-    'add|9':[{
+    'add|11':[{
       'id|+1':1,
       'shopName':'0005银座家居',
       'shop|1':[

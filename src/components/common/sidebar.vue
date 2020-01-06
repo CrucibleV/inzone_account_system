@@ -74,11 +74,18 @@
                         title: '返款管理',
                         subs:[
                             {
+                                index:'moneyInfo',
+                                title:'交易扣款明细'
+                            },
+                            {
                                 index:'money',
-                                title:'返款生成'
+                                title:'交易扣款周汇总'
                             },{
                                 index:'moneySear',
-                                title:'返款审核'
+                                title:'交易扣款审核'
+                            },{
+                                index:'moneySearHistory',
+                                title:'交易扣款审核历史'
                             }
                         ]
                     },

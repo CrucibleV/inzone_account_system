@@ -1,7 +1,7 @@
 <template>
   <div class="table">
     <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">返款审核列表</span>
+      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">返款审核历史</span>
     </div>
 
 
@@ -66,7 +66,7 @@
 <script>
   import axios from 'axios'
     export default {
-        name: "moneySear",
+        name: "moneySearHistory",
         data(){
             return{
                 sels:'',
