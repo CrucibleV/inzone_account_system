@@ -229,6 +229,7 @@
     width: 200px !important;
     margin: 0 10px;
   }
+  
   .searchBtn {
     height: 40px;
   }
