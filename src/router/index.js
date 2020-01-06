@@ -99,7 +99,7 @@ const router = new Router({
           path: 'moneyInfo',
           component: resolve=>require(['../components/views/money/moneyCreo/moneyInfo.vue'], resolve),
           meta:{
-            title:'新增返款管理',
+            title:'交易扣款明细',
             // requiresAuth: true
           }
         },{

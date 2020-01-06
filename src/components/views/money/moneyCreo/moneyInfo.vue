@@ -1,13 +1,13 @@
 <template>
   <div class="table">
     <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;" class="comTitle">新增返款信息</span>
+      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;" class="comTitle">交易扣款明细</span>
     </div>
 
 
     <div class="handle-box top-select-box clear">
       <div class="top">
-        <span style="font-size: 18px;float: left;margin-left: 50px;">活动时间:</span>
+        <span style="font-size: 16px;float: left;margin-left: 50px;margin-top:10px">交易时间:</span>
         <el-date-picker type="date" v-model="startTime" placeholder="起始时间" style="width: 20%;float: left"></el-date-picker>
         <el-col class="line" :span="1" style="width:10px;height: 30px;line-height: 30px;text-align: center">-</el-col>
         <el-date-picker type="date" v-model="endTime" placeholder="终止时间" style="width: 20%;float: left"></el-date-picker>
@@ -19,22 +19,22 @@
       </div>
     </div>
 
-
+    <!-- 交易明细表格 -->
     <el-table :data="tableData" class="handle-table" style="width: 100%;" stripe :row-style="{height:'45px'}" :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" @selection-change	="handleSelectDate" @select-all="handleSelectDate">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column prop="id" label="销售日期" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="shopName" label="供应商" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="shop" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="floor" label="楼栋" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="supplier" label="楼层" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="supplier" label="供应商" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="market" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="building" label="楼栋" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="floor" label="楼层" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="brand" label="品牌" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="size" label="商品编码" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="price" label="会员卡号" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pricitant" label="合同金额" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pricitant" label="支付手续费" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pricitant" label="赠品分摊" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pricitant" label="券扣费用" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pricitant" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="memberCard" label="会员卡号" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="contract" label="合同号" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="xshtje" label="合同金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="sxf" label="支付手续费" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="giftje" label="赠品分摊" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="yhjkdfy" label="券扣费用" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="state" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
               <el-button size="mini" type="success" class="primaty-top" @click="getDetil(scope.row)">详情</el-button>
@@ -42,7 +42,7 @@
       </el-table-column>
     </el-table>
 
-
+    <!-- 分页条 -->
     <div class="pagination">
       <!--     el-pagination新增分页   -->
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -50,9 +50,48 @@
       </el-pagination>
     </div>
 
+
+    <!-- 交易明细弹框 -->
+    <el-dialog title="交易明细详情" :visible.sync="detilVisible" width="800px">
+      <div>
+        <div class="shop-info-text">
+          <div class="box-title">交易基本信息</div>
+          <ul class="left-cont" :model="form">
+            <li class="info-li"><span style="font-weight:700">销售日期：</span></li>
+            <li class="info-li"><span style="font-weight:700">供应商编码及名称：</span></li>
+            <li class="info-li"><span style="font-weight:700">楼栋：</span></li>
+            <li class="info-li"><span style="font-weight:700">楼层：</span> </li>
+            <li class="info-li"><span style="font-weight:700">品牌：</span></li>
+            <li class="info-li"><span style="font-weight:700">会员卡号：</span> </li>
+            <li class="info-li"><span style="font-weight:700">单据号：</span> </li>
+            <li class="info-li"><span style="font-weight:700">是否参加活动：</span> </li>
+            <li class="info-li"><span style="font-weight:700">销售合同金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">实付金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">应返款金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">实际返款金额：</span> </li>
+          </ul>
+        </div>
+        <div class="shop-info-text">
+          <div class="box-title">交易扣款信息</div>
+          <div class="left-cont-kkxi" :model="form">
+            <li class="info-li"><span style="font-weight:700">支付手续费：</span> </li>
+            <li class="info-li"><span style="font-weight:700">账扣定额活动费明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">礼品扣点明细：</span>赠品成品6300×分担比例50%×参与领赠金额30000/总金额314755 </li>
+            <li class="info-li"><span style="font-weight:700">账扣广告费明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">账扣租金明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">优惠券扣点费用</span> </li>
+            <li class="info-li"><span style="font-weight:700">其他扣款：</span> </li>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="handleData" type="success">审核</el-button>
+          <el-button @click="detilVisible = false">取 消</el-button>
+        </span>
+    </el-dialog>
     
-<!--当giftVisible为true的时候，就弹出这个框-->
-    <el-dialog v-el-drag-dialog title="礼品费用" :visible.sync="giftVisible" width="80%">
+<!--赠品明细弹框-->
+    <el-dialog v-el-drag-dialog title="赠品详情" :visible.sync="giftVisible" width="80%">
       <el-table :data="gift" style="width: 100%" >
         <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="floor" label="楼层" align="center" :show-overflow-tooltip="true"></el-table-column>
@@ -77,7 +116,6 @@
         <el-table-column prop="" label="应扣金额合计" align="center" :show-overflow-tooltip="true"></el-table-column>
       </el-table>
     </el-dialog>
-
   </div>
 </template>
 
@@ -97,10 +135,39 @@
                 currentPage:1,//当前页码
                 pageSize:10,//当前页大小
                 totalCount:0,//全部记录条数
-                tableData:[],//表格数据
+                tableData:[
+                  {
+                    id:1,
+                    supplier:"shdjsdh",
+                    shopName:"sdhhsd",
+                  }
+                ],//表格数据
                 selectData:[],//要处理勾选的数据
+                form:{     //交易明细的详细数据
+                  saleDate:'',//交易日期
+                  supplier:'',//供应商编码及名称
+                  market:'',
+                  building:'',//楼栋
+                  floor:'',//楼层
+                  brand:'',//品牌
+                  memberCard:'',//会员卡号
+                  contract:'',//合同号
+                  xshtje:'',//销售合同金额
+                  sfje:'',//实付金额
+                  sxf:'',//手续费（借记卡手续费、贷记卡手续费、面值卡手续费、一卡通手续费、联名卡手续费、刮刮卡手续费、微信手续费、支付宝手续费）
+                  fkje:'',//应返款金额
+                  isActivity:'',//是否参加活动
+                  deje:'',//账扣定额活动费明细
+                  giftje:'',//礼品扣点明细
+                  zkggf:'',//账扣广告费明细
+                  zkzjf:'',//账扣租金明细
+                  yhjkdfy:'',//优惠卷的扣点费用
+                  qtkk:'',//其他扣款,
+                  sjfkje:''//实际返款金额
+                },
                 editVisible:false,
                 giftVisible:false,
+                detilVisible:false
             }
         },
         mounted(){
@@ -109,6 +176,7 @@
         methods:{
            //提交审核数据
             handleData(){
+              this.detilVisible = false
             },
             //处理被勾选的数据
             handleSelectDate(selection){
@@ -153,6 +221,7 @@
             },
             //获取该交易记录的详细数据
             getDetil(row){
+              this.detilVisible = true;
               console.log(row);
             },
             //日期处理
@@ -171,11 +240,6 @@
             },
             //获取数据
             getTableData(){    
-              service.get('/api/add').then(res=>{
-                if (res.data.code==0){
-                  this.tableData=res.data.add;
-                }
-              })
             }
         }
     }
@@ -231,6 +295,53 @@
   .primaty-top{
     margin-left: 30px;
     float: left;
+  }
+  /*弹框详情信息*/ 
+  .shop-info-text {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+  .box-title {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background: #afcff0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .left-cont {
+      width: 700px;
+      height: 240px;
+      margin: 20px 0 0 20px;
+  }
+  .left-cont-kkxi {
+      width: 700px;
+      height: 280px;
+      margin: 20px 0 0 20px;
+  }
+  .left-cont li {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      height: 30px;
+      width: 300px;
+      line-height: 30px;
+      float: left;
+      margin-bottom: 10px;
+  }
+  .left-cont-kkxi li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    height: 30px;
+    width: 600px;
+    line-height: 30px;
+    float: left;
+    margin-bottom: 10px;
   }
   .top{
     float:left;

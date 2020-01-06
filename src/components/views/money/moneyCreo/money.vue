@@ -4,7 +4,6 @@
         <i class="el-icon-menu"></i>
         <span class="label-text">交易扣款周汇总</span>
     </div>
-
     <div class="top-tool-wrap">
       <div class="right-handle-box">
         <div class="handle-box-loc handle-date-select">
