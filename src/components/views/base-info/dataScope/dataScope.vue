@@ -2,7 +2,7 @@
   <div class="table">
     <div class="left-table-label">
         <i class="el-icon-menu"></i>
-        <span class="label-text">微信推送历史记录</span>
+        <span class="label-text">数据范围</span>
     </div>
 
     <div class="top-tool-wrap">
@@ -232,8 +232,6 @@
   .searchBtn {
     height: 40px;
   }
-  
-  
   .bottom-top{
     float: left;
     margin-left: 20px;

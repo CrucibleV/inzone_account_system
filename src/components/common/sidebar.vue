@@ -63,8 +63,11 @@
                                 index:'supplier',
                                 title:'供应商管理'
                             },{
-                                index:'moneyJuan',
-                                title:'劵扣管理'
+                                index: 'moneyJuan',
+                                title: '劵扣管理'
+                            },{
+                                index: 'dataScope',
+                                title: '数据范围'
                             }
                         ]
                     },

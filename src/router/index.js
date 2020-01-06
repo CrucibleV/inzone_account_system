@@ -48,6 +48,14 @@ const router = new Router({
           }
         },
         {
+          path:'dataScope',
+          component: resolve=>require(['../components/views/base-info/dataScope/dataScope.vue'],resolve),
+          meta:{
+            title:'数据范围',
+            // requiresAuth:true
+          }
+        },
+        {
           path:'shopInfo',
           component: resolve=>require(['../components/views/base-info/shop/shopInfo.vue'],resolve),
           meta:{
