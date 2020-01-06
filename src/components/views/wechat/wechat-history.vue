@@ -210,7 +210,7 @@
   }
   .right-handle-box {
     position: relative;
-    height: 60px;
+    height: 40px;
     width: 100%;
     background: #fafafa;
     text-align: left;
@@ -223,11 +223,14 @@
     display: flex;
   }
   .select-label {
-    margin-left: 20px;
+    margin: 10px 0 0 20px;
   }
   .searchText {
     width: 200px !important;
     margin: 0 10px;
+  }
+  .searchBtn {
+    height: 40px;
   }
   
   
