@@ -56,10 +56,10 @@
 <script>
   import elDragDialog from '@/directive/el-drag-dialog'
   import axios from 'axios'
-  import service from '../../../../axios/api'
+  import service from '../../../axios/api'
     export default {
       directives:{elDragDialog},
-        name: "moneyInfo",
+        name: "billSummaryExamine",
         data(){
             return{
                 gift:[],

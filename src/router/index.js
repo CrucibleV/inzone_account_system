@@ -88,32 +88,32 @@ const router = new Router({
           }
         },
         {
-          path: 'money',
-          component: resolve=>require(['../components/views/money/moneyCreo/money.vue'], resolve),
+          path: 'billSummary',
+          component: resolve=>require(['../components/views/bill/billSummary.vue'], resolve),
           meta:{
-            title:'返款生成管理',
+            title:'扣款汇总',
             // requiresAuth: true
           }
         },
         {
-          path: 'moneyInfo',
-          component: resolve=>require(['../components/views/money/moneyCreo/moneyInfo.vue'], resolve),
+          path: 'billDetail',
+          component: resolve=>require(['../components/views/bill/billDetail.vue'], resolve),
           meta:{
-            title:'交易扣款明细',
+            title:'扣款明细',
             // requiresAuth: true
           }
         },{
-          path: 'moneySear',
-          component: resolve=>require(['../components/views/money/moneySear/moneySear.vue'], resolve),
+          path: 'billSummaryExamine',
+          component: resolve=>require(['../components/views/bill/billSummaryExamine.vue'], resolve),
           meta:{
-            title:'返款审核管理',
+            title:'扣款审核',
             // requiresAuth: true
           }
         },{
-          path: 'moneySearHistory',
-          component: resolve=>require(['../components/views/money/moneySear/moneySearHistory.vue'], resolve),
+          path: 'examineHistory',
+          component: resolve=>require(['../components/views/bill/examineHistory.vue'], resolve),
           meta:{
-            title:'返款审核历史',
+            title:'审核历史',
             // requiresAuth: true
           }
         },{

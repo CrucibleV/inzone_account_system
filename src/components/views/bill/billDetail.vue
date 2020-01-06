@@ -1,7 +1,7 @@
 <template>
   <div class="table">
     <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;" class="comTitle">交易扣款审核</span>
+      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;" class="comTitle">交易扣款明细</span>
     </div>
 
 
@@ -15,30 +15,29 @@
         <el-button size="mini" class="primaty-top" type="primary" icon="el-icon-search" @click="getTableData"><span style="font-size: 12px">查询</span></el-button>
       </div>
       <div class="bottom">
-        <el-button size="mini" type="success" class="primaty-top" @click="handleData"><i class="el-icon-upload2"></i>批量审核</el-button>
+        <el-button size="mini" type="success" class="primaty-top" @click="handleData"><i class="el-icon-upload2"></i>提交审核</el-button>
       </div>
     </div>
 
     <!-- 交易明细表格 -->
     <el-table :data="tableData" class="handle-table" style="width: 100%;" stripe :row-style="{height:'45px'}" :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" @selection-change	="handleSelectDate" @select-all="handleSelectDate">
       <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="id" label="销售日期" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="supplier" label="供应商" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="market" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="building" label="楼栋" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="floor" label="楼层" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="brand" label="品牌" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="memberCard" label="当周收入（元）" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="contract" label="支付手续费（元）" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="xshtje" label="礼品分担总额（元）" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="sxf" label="浪潮余额（元）" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="giftje" label="活动定额费用（元）" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="yhjkdfy" label="账扣费用(元)" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="yhjkdfy" label="扣款说明" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="state" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column label="操作" align="center" width="180px" fixed="right">
+      <el-table-column prop="memberCard" label="会员卡号" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="contract" label="合同号" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="xshtje" label="合同金额(元)" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="sxf" label="支付手续费(元)" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="giftje" label="赠品分摊(元)" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="yhjkdfy" label="券扣费用(元)" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="state | filterTableState" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-              <el-button size="mini" type="primary" plain @click="getDetil(scope.row)">审核</el-button>
-              <el-button size="mini" type="success" plain @click="getDetil(scope.row)">详情</el-button>
+              <el-button size="mini" type="success" plain @click="getDetail(scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,16 +49,83 @@
                      :current-page="currentPage" :page-sizes="[10,20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
       </el-pagination>
     </div>
+
+
+    <!-- 交易明细弹框 -->
+    <el-dialog title="交易明细详情" :visible.sync="detilVisible" width="800px">
+      <div>
+        <div class="shop-info-text">
+          <div class="box-title">交易基本信息</div>
+          <ul class="left-cont" :model="form">
+            <li class="info-li"><span style="font-weight:700">销售日期：</span></li>
+            <li class="info-li"><span style="font-weight:700">供应商编码及名称：</span></li>
+            <li class="info-li"><span style="font-weight:700">楼栋：</span></li>
+            <li class="info-li"><span style="font-weight:700">楼层：</span> </li>
+            <li class="info-li"><span style="font-weight:700">品牌：</span></li>
+            <li class="info-li"><span style="font-weight:700">会员卡号：</span> </li>
+            <li class="info-li"><span style="font-weight:700">单据号：</span> </li>
+            <li class="info-li"><span style="font-weight:700">是否参加活动：</span> </li>
+            <li class="info-li"><span style="font-weight:700">销售合同金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">实付金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">应返款金额：</span> </li>
+            <li class="info-li"><span style="font-weight:700">实际返款金额：</span> </li>
+          </ul>
+        </div>
+        <div class="shop-info-text">
+          <div class="box-title">交易扣款信息</div>
+          <div class="left-cont-kkxi" :model="form">
+            <li class="info-li"><span style="font-weight:700">支付手续费：</span> </li>
+            <li class="info-li"><span style="font-weight:700">账扣定额活动费明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">礼品扣点明细：</span>赠品成品6300×分担比例50%×参与领赠金额30000/总金额314755 </li>
+            <li class="info-li"><span style="font-weight:700">账扣广告费明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">账扣租金明细：</span> </li>
+            <li class="info-li"><span style="font-weight:700">优惠券扣点费用</span> </li>
+            <li class="info-li"><span style="font-weight:700">其他扣款：</span> </li>
+          </div>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="handleData" type="success">审核</el-button>
+          <el-button @click="detilVisible = false">取 消</el-button>
+        </span>
+    </el-dialog>
+    
+<!--赠品明细弹框-->
+    <el-dialog v-el-drag-dialog title="赠品详情" :visible.sync="giftVisible" width="80%">
+      <el-table :data="gift" style="width: 100%" >
+        <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="floor" label="楼层" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="card" label="会员卡" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="supplier" label="供应商" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="brand" label="品牌" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="pMoney" label="参与另赠金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="totleM" label="总金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="pD" label="参与领增档位" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="pL" label="参加联单金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column label="30万" align="center" :show-overflow-tooltip="true">
+          <el-table-column prop="bing" label="冰箱（6300元）"  align="center" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="huawei" label="华为手机（7000元）" align="center" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column label="应扣金额（50%）" align="center" :show-overflow-tooltip="true"></el-table-column>
+        </el-table-column>
+        <el-table-column label="50万" align="center" :show-overflow-tooltip="true">
+          <el-table-column prop="" label="电视冰箱（12200元）" align="center" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="" label="创维套餐（11000元）" align="center" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column prop="" label="应扣金额（50%）" align="center" :show-overflow-tooltip="true"></el-table-column>
+        </el-table-column>
+        <el-table-column prop="totleMon" label="领增费用合计" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="" label="应扣金额合计" align="center" :show-overflow-tooltip="true"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import elDragDialog from '@/directive/el-drag-dialog'
   import axios from 'axios'
-  import service from '../../../../axios/api'
+  import service from '../../../axios/api'
     export default {
       directives:{elDragDialog},
-        name: "moneyInfo",
+        name: "billDetail",
         data(){
             return{
                 gift:[],
@@ -72,18 +138,18 @@
                 tableData:[
                   {
                     id:1,
-                    supplier:"[00219]济南普田工贸有限公司",
+                    supplier:"[04044]济南银座家居梦蒂家私经营",
                     market:"中心店",
                     building:'独栋',
                     floor:'1F',
                     brand:'欧派衣柜',
-                    memberCard:'124',
-                    contract:'2',
-                    xshtje:'3.2',
-                    sxf:'20',
-                    giftje:'5.6',
-                    yhjkdfy:'1.2',
-                    state:''
+                    memberCard:'48488848',
+                    contract:'1544815',
+                    xshtje:'100000',
+                    sxf:'100',
+                    giftje:'861',
+                    yhjkdfy:'69',
+                    state:'1'
                   }
                 ],//表格数据
                 selectData:[],//要处理勾选的数据
@@ -114,11 +180,20 @@
                 detilVisible:false
             }
         },
-        filters:{
-
-        },
         mounted(){
           this.getPreWeekTime();
+        },
+        filters:{
+          filterTableState(value){
+            switch(value){
+              case 0:
+                return '未确认'
+                break
+              case 1:
+                return '确认未审核'
+                break
+            }
+          }
         },
         methods:{
            //提交审核数据
@@ -167,7 +242,7 @@
               //console.log(this.dateFilter(startTime))
             },
             //获取该交易记录的详细数据
-            getDetil(row){
+            getDetail(row){
               this.detilVisible = true;
               console.log(row);
             },

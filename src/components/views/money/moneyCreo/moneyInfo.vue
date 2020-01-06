@@ -37,7 +37,7 @@
       <el-table-column prop="state" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-              <el-button size="mini" type="success" class="primaty-top" @click="getDetil(scope.row)">详情</el-button>
+              <el-button size="mini" type="success" plain @click="getDetil(scope.row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -293,6 +293,7 @@
     text-align: center
   }
   .primaty-top{
+    height: 40px;
     margin-left: 30px;
     float: left;
   }
