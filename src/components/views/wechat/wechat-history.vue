@@ -7,28 +7,31 @@
 
     <div class="top-tool-wrap">
       <div class="right-handle-box">
-        <div class="handle-box-select">
-          <el-input class="searchText" v-if="supplier.name!=''" v-model="search"  placeholder="请输入推送微信"></el-input>
-          <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
-            <span style="font-size: 12px">查询</span>
-            </el-button>
+        <div class="handle-box-loc handle-date-select">
+          <span>推送日期选择：</span>
+          <el-date-picker v-model="value2" type="daterange" align="right"
+                      unlink-panels range-separator="至"
+                      start-placeholder="开始日期" end-placeholder="结束日期"
+                      :picker-options="pickerOptions">
+          </el-date-picker>
         </div>
+        <span class="select-label">查询条件:</span>
+        <el-input class="searchText" v-if="supplier.name!=''" v-model="search"  placeholder="请输入推送微信"></el-input>
+        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
+          <span style="font-size: 12px">查询</span>
+        </el-button>
       </div>
     </div>
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column prop="ROW_ID" label="ID" width="70px" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBID" label="代码" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBCNAME" label="销售商名称" width="200px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID1" label="经销" width="80px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID2" label="成本代销" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID3" label="扣率代销" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBSTATUS" label="状态" width="90px" align="center"></el-table-column>
-      <el-table-column prop="SBWMID4" label="联营" width="80px" align="center"></el-table-column>
-      <el-table-column prop="SBWMID5" label="租赁" width="80px" align="center"></el-table-column>
-      <el-table-column prop="SBREGCODE" label="地区代码" width="100px" align="center"></el-table-column>
-      <el-table-column prop="SBLRRQ" label="录入日期" width="160px" align="center"></el-table-column>
-      <el-table-column prop="SBCATCODE" label="分类" width="90px" align="center"></el-table-column>
+      <el-table-column prop="SBID" label="推送日期" align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SBCNAME" label="任务名称" width="200px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SBWMID1" label="审核时间" width="80px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SBWMID2" label="推送人" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SBWMID3" label="推送情况" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SBSTATUS" label="说明" width="90px" align="center"></el-table-column>
+      <el-table-column prop="SBWMID4" label="操作" width="80px" align="center"></el-table-column>
       <el-table-column label="操作" width="250px" fixed="right" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -190,7 +193,6 @@
 </script>
 
 <style scoped>
-
   /* = 顶部选项栏 = */
   .top-tool-wrap {
       width: 100%;
@@ -206,32 +208,29 @@
   .left-table-label .label-text {
       font-size: 18px;
   }
-
   .right-handle-box {
     position: relative;
     height: 60px;
     width: 100%;
     background: #fafafa;
+    text-align: left;
+    display: flex;
+    padding: 10px 20px;
+    font-size: 14px;
   }
-  .right-handle-box .handle-box-select{
-      position: absolute;
-      left: 20px;
-      top: 10px;
-      height:30px;
-      text-align: right;
+  .handle-content-select {
+    margin-left: 20px;
+    display: flex;
   }
-  .right-handle-box .handle-box-btns{
-      position: absolute;
-      right: 20px;
-      top: 12px;
-      margin-left:20px;
-      height: 30px;
+  .select-label {
+    margin-left: 20px;
   }
-  .handle-box-select .searchText{
-    width: 260px;
-    height: 30px;
+  .searchText {
+    width: 200px !important;
+    margin: 0 10px;
   }
-
+  
+  
   .bottom-top{
     float: left;
     margin-left: 20px;
