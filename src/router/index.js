@@ -116,7 +116,15 @@ const router = new Router({
             title:'审核历史',
             // requiresAuth: true
           }
-        },{
+        },,{
+          path: 'koudianSearch',
+          component: resolve=>require(['../components/views/bill/koudianSearch.vue'], resolve),
+          meta:{
+            title:'增品扣点',
+            // requiresAuth: true
+          }
+        },
+        {
           path: 'moneyJuan',
           component: resolve=>require(['../components/views/base-info/quankou/moneyJuan.vue'], resolve),
           meta:{

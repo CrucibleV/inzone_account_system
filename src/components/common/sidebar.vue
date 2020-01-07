@@ -89,6 +89,9 @@
                             },{
                                 index:'examineHistory',
                                 title:'交易扣款审核历史'
+                            },{
+                                index:'koudianSearch',
+                                title:'赠品扣点查询'
                             }
                         ]
                     },
