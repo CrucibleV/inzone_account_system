@@ -24,23 +24,23 @@
     </div>
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" :span-method="objectSpanMethod">
-      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="selection" width="55px"></el-table-column>
       <el-table-column prop="index" label="序号" align="center"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="lc" label="楼层" align="center"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="vip" label="会员卡" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysbm" label="供应商编码" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pp" label="品牌" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="quoCode" label="正价商品编码" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="jinEAmount" label="参与领增金额" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="ConutjinE" label="总金额" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="level" label="参与领增金额档位" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="lianDan" label="参与联单金额" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="giveName" label="赠品名称" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="givePrice" label="赠品价格" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="proportion" label="分摊比例" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="feeCount" label="领增费用合计" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="deduAmount" label="应扣金额" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="gysbm" label="供应商编码"  align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="gysmc" label="供应商名称" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="pp" label="品牌"  align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="quoCode" label="正价商品编码" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="jinEAmount" label="参与领增金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="CountjinE" label="总金额" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="level" label="参与领增金额档位" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="lianDan" label="参与联单金额"  align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="giveName" label="赠品名称" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="givePrice" label="赠品价格" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="proportion" label="分摊比例" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="feeCount" label="领增费用合计" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="deduAmount" label="应扣金额" align="center" :show-overflow-tooltip="true"></el-table-column>
     </el-table>
     <div class="pagination">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -67,10 +67,10 @@
                     quoCode:'',
                     jinEAmount:'30000',
                     CountjinE:'314755',
-                    level:'',                    
+                    level:'300000',                    
                     lianDan:'28596.67',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'600.47',
                     deduAmount:'300.23'
@@ -84,10 +84,10 @@
                     quoCode:'',
                     jinEAmount:'17155',
                     CountjinE:'314755',
-                    level:'',                    
+                    level:'300000',                    
                     lianDan:'16350.81',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'343.37',
                     deduAmount:'171.68'
@@ -100,11 +100,11 @@
                     pp: '欧派',
                     quoCode:'',
                     jinEAmount:'30000',
-                    CountjinE:'',
-                    level:'',                    
+                    CountjinE:'314755',
+                    level:'300000',                    
                     lianDan:'28593.67',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'600.47',
                     deduAmount:'300.23'
@@ -117,11 +117,11 @@
                     pp: '欧派',
                     quoCode:'',
                     jinEAmount:'94000',
-                    CountjinE:'',
-                    level:'',                    
+                    CountjinE:'314755',
+                    level:'300000',                    
                     lianDan:'89593.49',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'1881.46',
                     deduAmount:'940.73'
@@ -134,11 +134,11 @@
                     pp: '欧派',
                     quoCode:'',
                     jinEAmount:'58600',
-                    CountjinE:'',
-                    level:'',                    
+                    CountjinE:'314755',
+                    level:'300000',                    
                     lianDan:'55852.97',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'1172.91',
                     deduAmount:'586.46'
@@ -151,11 +151,11 @@
                     pp: '欧派',
                     quoCode:'',
                     jinEAmount:'45000',
-                    CountjinE:'',
-                    level:'',                    
+                    CountjinE:'314755',
+                    level:'300000',                    
                     lianDan:'42890.50',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'900.70',
                     deduAmount:'450.35'
@@ -168,17 +168,17 @@
                     pp: '欧派',
                     quoCode:'',
                     jinEAmount:'40000',
-                    CountjinE:'',
-                    level:'',                    
+                    CountjinE:'314755',
+                    level:'300000',                    
                     lianDan:'38124.89',
-                    giveName:'',
-                    givePrice:'',
+                    giveName:'华为手机',
+                    givePrice:'6300',
                     proportion:'50%',
                     feeCount:'800.62',
                     deduAmount:'400.31'
                   },
                 ],
-                totalCount: 3,
+                totalCount: 7,
                 sels:'',
                 currentPage: 1,
                 pagesize: 10,

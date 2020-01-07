@@ -74,8 +74,12 @@
             <!-- <el-form-item label="电话号码" prop="phone">
               <el-input v-model="form.phone" placeholder="请输入门店电话" clearable></el-input>
             </el-form-item> -->
-            <el-form-item label="最后修改时间" prop="lastMod">
+            <!-- <el-form-item label="最后修改时间" prop="lastMod">
               <el-input v-model="form.lastMod" placeholder="请选择最后修改时间" clearable></el-input>
+            </el-form-item> -->
+            <el-form-item label="最后修改时间:" prop="lastMod">
+              <el-date-picker v-model="form.lastMod" placeholder="请选择最后修改时间" type="date" clearable style="width: 100%;">
+              </el-date-picker>
             </el-form-item>
             <el-form-item label="状态:" prop="state" >
               <el-select v-model="form.state" placeholder="请选择门店状态" style="width: 100%;">
@@ -137,23 +141,12 @@
           <el-form-item label="门店简称">
             <el-input v-model="form.shortName" clearable></el-input>
           </el-form-item>
-          <!-- <el-form-item label="地址">
-            <el-input v-model="form.address" clearable></el-input>
-          </el-form-item> -->
-          <!-- <el-form-item label="经纬度">
-            <el-input v-model="form.lnglat" clearable></el-input>
-          </el-form-item> -->
-          <!-- <el-form-item label="电话">
-            <el-input v-model="form.phone" clearable></el-input>
-          </el-form-item> -->
-          <el-form-item label="最后修改时间" >
-              <el-input v-model="form.lastMod" placeholder="请最后修改时间" clearable></el-input>
-          </el-form-item>
+          <el-form-item label="最后修改时间:" prop="lastMod">
+              <el-date-picker v-model="form.lastMod" placeholder="请选择最后修改时间" type="date" clearable style="width: 100%;">
+              </el-date-picker>
+            </el-form-item>
           <el-form-item label="状态" >
-            <el-select v-model="form.state" style="width: 100%;">
-              <el-option label="正常" value="zhengchang"></el-option>
-              <el-option label="暂停" value="zanting"></el-option>
-            </el-select>
+            <el-input v-model="form.state" placeholder="请状态" clearable :disabled="true"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
