@@ -1,285 +1,324 @@
 <template>
   <div class="table">
-    <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">推送任务信息列表</span>
+    <div class="left-table-label">
+        <i class="el-icon-menu"></i>
+        <span class="label-text">微信任务推送列表</span>
+    </div>
+    <div class="top-tool-wrap">
+      <div class="right-handle-box">
+        <div class="handle-box-loc handle-date-select">
+          <span>日期范围：</span>
+          <el-date-picker v-model="value2" type="daterange" align="right" unlink-panels range-separator="至"
+                      start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+          </el-date-picker>
+        </div>
+        <span class="select-label">查询条件:</span>
+        <el-input class="searchText"  v-model="search"  placeholder="请输入推送微信"></el-input>
+        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
+          <span style="font-size: 12px">查询</span>
+        </el-button>
+        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="getData">
+          <span style="font-size: 12px">发送选中结果</span>
+        </el-button>
+      </div>
     </div>
 
-    <div class="handle-box top-select-box clear">
-      <div class="top">
-        <el-input class="searchText"  placeholder="请输入任务编号"></el-input>
-        <el-button size="mini" class="primaty-top" type="primary" icon="el-icon-search" @click="searchKey"><span style="font-size: 12px">查询</span></el-button>
-      </div>
-      <div class="bottom">
-        <el-button size="mini" type="success" icon="el-icon-plus" class="bottom-top" suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增任务</span></el-button>
-        <el-button size="mini" type="danger" icon="el-icon-delete" class="bottom-top" @click="deleteFileOrDirectory(sels)"><span style="font-size: 12px">批量删除</span></el-button>
-        <el-button size="mini" type="warning" class="bottom-top"><i class="el-icon-download"></i>导入</el-button>
-        <el-button size="mini" type="success" class="bottom-top"><i class="el-icon-upload2"></i>导出</el-button>
-        <el-button size="mini" type="warning" icon="el-icon-refresh" class="bottom-top"><span style="font-size: 12px" @click="refresh">刷新</span></el-button>
-      </div>
-    </div>
-
-
-    <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%"  @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}"  >
-      <el-table-column type="selection" align="center"></el-table-column>
-      <el-table-column prop="id" label="ID" width="70px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="number" label="任务编码" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="name" label="任务名称" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="start" label="推送起始时间" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pin" label="推送频率" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="lastTime" label="上次推送时间" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="nextTime" label="下次推送时间" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="creater" label="创建人" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true">
-        <template scope="scope">
-          <font v-if="scope.row.status=='生效'" color="green">{{scope.row.status}}</font>
-          <font  v-else color="red">{{scope.row.status}}</font>
-        </template>
-      </el-table-column>
-      <el-table-column  label="操作" width="260px" align="center" >
-        <template scope="scope">
-          <font v-if="scope.row.status=='生效'" color="green">
-            <el-button size="mini" type="primary" @click="checkInfo(scope.$index, scope.row)">查看</el-button>
-            <el-button size="mini" type="danger
-" @click="handleDel(scope.$index, scope.row)">停用</el-button>
-          </font>
-          <font  v-else color="red">
-            <el-button size="mini" type="primary" @click="checkInfo(scope.$index, scope.row)">查看</el-button>
-            <el-button size="mini" type="success" @click="start(scope.$index, scope.row)">启用</el-button>
-          </font>
+    <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="date" label="日期范围" width="160px" align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="gysmc" label="门店简称" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="ld" label="楼栋" width="80px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="lc" label="楼层" width="80px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="pp" label="品牌" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="gysbm" label="供应商编码" width="100px" align="center"></el-table-column>
+      <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center"></el-table-column>
+      <el-table-column prop="yhqftze" label="对账文件" width="120px" align="center"></el-table-column>
+      <el-table-column prop="lcye" label="审核人" width="90px" align="center"></el-table-column>
+      <el-table-column prop="hdgdfy" label="审核时间" width="120px" align="center"></el-table-column>
+      <el-table-column prop="kggf" label="企业微信管理员" width="90px" align="center"></el-table-column>
+      <el-table-column prop="kzj" label="推送时间" width="90px" align="center"></el-table-column>
+      <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
+      <el-table-column label="操作" width="230px" fixed="right" align="center">
+        <template slot-scope="scope">
+          <el-button size="mini" type="primary" plain @click="handleEdit(scope.$index, scope.row)">对账文件</el-button>
+          <el-button size="mini" type="success" plain @click="toSeeDetail(scope.$index, scope.row)">再次发送</el-button>
         </template>
       </el-table-column>
     </el-table>
-
-
-
-
     <div class="pagination">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                     :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+                     :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
 
-
-
-<!--    当checkVisible为true的时候，就弹出添加框-->
-    <el-dialog v-el-drag-dialog  title="新增任务" :visible.sync="checkVisible" width="30%">
-      <el-form ref="from" :model="from" label-width="95px" :rules="rules2" class="demo-ruleForm">
-        <el-form-item label="任务名称：" prop="dask" >
-          <el-input size="mini"  style="width: 200px;height: 40px;line-height: 40px;" placeholder="请输入任务名称"></el-input>
+    <!-- 修改弹框 -->
+    <el-dialog title="交易扣款周汇总详情与修改" :visible.sync="editVisible" width="600px">
+      <el-form ref="form" :model="form" label-width="150px" >
+        <el-form-item label="楼层：">
+          <el-input v-model="form.lc" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="开始时间：" prop="time">
-          <el-date-picker type="date" v-model="date1" placeholder="起始时间" style="width: 32%;float: left;height: 40px;line-height: 40px"  ></el-date-picker>
-          <el-col class="line" :span="2" style="width:10px;height: 40px;line-height: 40px;text-align: center">-</el-col>
-          <el-time-picker placeholder="请选择时间" v-model="date2" style="width: 34%;float: left;height: 40px;line-height: 40px"></el-time-picker>
+        <el-form-item label="供应商编码：" prop="phone">
+          <el-input v-model="form.gysbm" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="创建人：" prop="creater">
-          <el-select v-model="creater" placeholder="请选择" style="height: 40px;line-height: 40px">
-            <el-option label="吴森宇" value="wu"></el-option>
-            <el-option label="李明" value="li"></el-option>
-          </el-select>
+        <el-form-item label="供应商名称：" prop="phone">
+          <el-input v-model="form.gysmc" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="状态：" prop="status">
-          <el-select v-model="sta" placeholder="请选择" style="height: 40px;line-height: 40px">
-            <el-option label="生效" value="ok"></el-option>
-            <el-option label="无效" value="no"></el-option>
-          </el-select>
+        <el-form-item label="品牌：" prop="phone">
+          <el-input v-model="form.pp" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="推送频率：" prop="pin">
-          <el-radio-group v-model="checkList" style="height: 40px;line-height: 40px;float: left">
-            <el-radio label="每日" style="height: 40px;line-height: 40px;font-size: 16px"></el-radio>
-            <el-radio label="每周" style="height: 40px;line-height: 40px;margin-left: 50px"></el-radio>
-            <el-radio label="每月" style=" height: 40px;line-height: 40px;margin-left: 50px"></el-radio>
-            <el-radio label="每季" style="height: 40px;line-height: 40px;margin-left: 50px"></el-radio>
-          </el-radio-group>
+        <el-form-item label="本周收入：" prop="phone">
+          <el-input v-model="form.bzsr" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="推送内容：" prop="content">
-          <el-select v-model="select" style="height: 50px;line-height: 40px;width: 40%;float: left">
-            <el-option label="[1452] 2019年10月7日-2019年10月13日返款表" value="1452"></el-option>
-            <el-option label="[1214] 2019年10月2日-2019年10月7日返款表" value="1214"></el-option>
-            <el-option label="[1215] 2019年10月14日-2019年10月15日返款表" value="1215"></el-option>
-          </el-select>
+        <el-form-item label="支付手续费：" prop="phone">
+          <el-input v-model="form.zfsxf" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="推送人员：" prop="people">
-          <el-autocomplete v-model="people" placeholder="搜索好友"
-                           @select="handleSelect" :fetch-suggestions="querySearch"
-                           style="width: 40%;float: left;height: 40px;line-height: 40px" >
-            <el-button slot="append" icon="el-icon-search" ></el-button>
-          </el-autocomplete>
+        <el-form-item label="礼品分摊总额：" prop="phone">
+          <el-input v-model="form.lpftze" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
+        </el-form-item>
+        <el-form-item label="优惠券分摊总额：" prop="phone">
+          <el-input v-model="form.yhqftze" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
+        </el-form-item>
+        <el-form-item label="浪潮余额：" prop="phone">
+          <el-input v-model="form.lcye" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="活动固定费用：" prop="phone">
+          <el-input v-model="form.hdgdfy" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="扣广告费：" prop="phone">
+          <el-input v-model="form.kggf" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="扣租金费：" prop="phone">
+          <el-input v-model="form.kzj" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="其他扣款：" prop="phone">
+          <el-input v-model="form.qtkk" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="扣款说明：" prop="phone">
+          <el-input v-model="form.kksm" style="width: 350px;margin-left: 20px" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="实际返款：" prop="phone">
+          <el-input v-model="form.sjfk" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
+        </el-form-item>
+        <el-form-item label="状态：" prop="phone">
+          <el-input v-model="form.status" style="width: 350px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
       </el-form>
-
-
       <span slot="footer" class="dialog-footer">
-          <el-button @click="checkVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveAdd">确 定</el-button>
+          <el-button @click="addVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
         </span>
     </el-dialog>
-
-
-
-
   </div>
 </template>
 
 <script>
-  import elDragDialog from '@/directive/el-drag-dialog'
-    import axios from 'axios'
+  import axios from 'axios'
     export default {
-      directives:{elDragDialog},
-        name: "wechat-manage",
-        data(){
-            return{
-                tableData:[],
-                currentPage:1,
-                pagesize:10,
+        name: "money",
+        data() {
+            return {
+                tableData: [
+                  {
+                    index: 1,
+                    lc: '一层',
+                    gysbm: 'D12567',
+                    gysmc: '欧派橱柜',
+                    pp: '欧派',
+                    bzsr: '100万',
+                    zfsxf: '2000',
+                    lpftze: '10000',
+                    yhqftze: '10780',
+                    lcye: '',
+                    hdgdfy: '4000',
+                    kggf: '5926',
+                    kzj: '8900',
+                    qtkk: '19293',
+                    ld: 'A座',
+                    date: '2016年8月10日-17日',
+                    sjfk: '35468',
+                    status: '未审核'
+                  },{
+                    index: 2,
+                    lc: '三层',
+                    gysbm: 'D12567',
+                    gysmc: '瓷砖',
+                    pp: '史丹利',
+                    bzsr: '96万',
+                    zfsxf: '2000',
+                    lpftze: '89000',
+                    yhqftze: '8780',
+                    lcye: '',
+                    hdgdfy: '8900',
+                    kggf: '5926',
+                    kzj: '8900',
+                    qtkk: '19293',
+                    ld: 'A座',
+                    date: '2016年8月10日-17日',
+                    sjfk: '35468',
+                    status: '审核通过'
+                  },{
+                    index: 3,
+                    lc: '三层',
+                    gysbm: 'D12567',
+                    gysmc: '瓷砖',
+                    pp: '史丹利',
+                    bzsr: '96万',
+                    zfsxf: '2000',
+                    lpftze: '89000',
+                    yhqftze: '8780',
+                    lcye: '',
+                    hdgdfy: '8900',
+                    kggf: '5926',
+                    kzj: '8900',
+                    qtkk: '19293',
+                    ld: 'A座',
+                    date: '2016年8月10日-17日',
+                    sjfk: '35468',
+                    status: '审核未通过'
+                  },
+                ],
+                totalCount: 3,
                 sels:'',
-                checkVisible:false,
-                date1:'',
-                date2:'',
-                checkList:[],
-                creater:'',
-                sta:'',
-                select:'',
-                people:'',
-                person:[],
-                rules2:{
-                    dask:[
-                        {required: true, message: '任务名称不能为空', trigger: 'blur'}
-                    ],
-                    time:[
-                        {required: true, message: '开始时间不能为空', trigger: 'blur'}
-                    ],
-                    creater:[
-                        {required: true, message: '创建人不能为空', trigger: 'blur'}
-                    ],
-                    status:[
-                        {required: true, message: '状态不能为空', trigger: 'blur'}
-                    ],
-                    pin:[
-                        {required: true, message: '推送频率不能为空', trigger: 'blur'}
-                    ],
-                    content:[
-                        {required: true, message: '推送内容不能为空', trigger: 'blur'}
-                    ],
-                    people:[
-                        {required: true, message: '推送人员不能为空', trigger: 'blur'}
-                    ],
+                currentPage: 1,
+                pagesize: 10,
+                editVisible: false,
+                ind: 1,
+                msg: '',
+                search:'', 
+                form: {
+                    lc:'',
+                    gysbm:'',
+                    gysmc:'',
+                    pp:'',
+                    bzsr:'',
+                    zfsxf:'',
+                    lpftze: '',
+                    yhqftze:'',
+                    lcye:'',
+                    hdgdfy:'',
+                    kggf:'',
+                    kzj:'',
+                    qtkk:'',
+                    kksm:'',
+                    sjfk:'',
+                    status:''
                 }
             }
         },
-        mounted() {
-            this.person=this.loadAll();
-        },
-        created:function(){
-            axios({
-                url:'/api/dask',
-                method: 'get',
-                params:[],
-            }).then(res=>{
-                if (res.data.code=='0'){
-                    this.tableData=res.data.dask;
-                }else{
-                    alert('请求失败')
-                }
 
-            })
+        created() {
+          // this.getData();
         },
-        methods:{
-            start(index,row){},
-            saveAdd(){},
-            querySearch(queryString, cb) {
-                var person = this.person;
-                var results = queryString ? person.filter(this.createFilter(queryString)) : person;
-                // 调用 callback 返回建议列表的数据
-                cb(results);
+
+        methods: {
+            getData() {
+                axios({
+                    url: this.$store.state.UrlIP_ERP + "",
+                    method: "post",
+                    params: {
+                        // token: localStorage.getItem("Authorization"),
+                        pageIndex: this.currentPage,
+                        pageSize: this.pagesize,
+                        keyword: this.search
+                    },
+                    headers: {
+                        'Content-type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(res => {
+                    this.tableData = res.data.data;
+                    this.totalCount = res.data.respPage.totalCount;
+                }).catch(error=>{
+                    console.log(error)
+                });
             },
-            createFilter(queryString) {
-                return (per) => {
-                    return (per.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+
+            /**
+             * 详情与修改
+            */
+            handleEdit(index,row){
+                this.ind=index;
+                this.msg=row;
+                this.form={
+                    lc: this.msg.lc,
+                    gysbm: this.msg.gysbm,
+                    gysmc: this.msg.gysmc,
+                    pp: this.msg.pp,
+                    bzsr: this.msg.bzsr,
+                    zfsxf: this.msg.zfsxf,
+                    lpftze: this.msg.lpftze,
+                    yhqftze: this.msg.yhqftze,
+                    lcye: this.msg.lcye,
+                    hdgdfy: this.msg.hdgdfy,
+                    kggf: this.msg.kggf,
+                    kzj: this.msg.kzj,
+                    qtkk: this.msg.qtkk,
+                    kksm: this.msg.kksm,
+                    sjfk:this.msg.sjfk,
+                    status: this.msg.status
                 };
+                this.editVisible=true;
             },
-            loadAll() {
-                return [
-                    { "value": "牛亚朦" },
-                    { "value": "吴森宇" },
-                    { "value": "李明" },
-                    { "value": "七年~" },
-                    { "value": "class" },
+            
+            /**
+             * 查看本周汇总的明细
+            */
+            toSeeDetail(index,row) {
+              alert('正在开发... 将会查看本周汇总的明细!');
+            },
 
-
-                ];
+            /**
+             * 处理分页
+            */
+            handleSizeChange(val) {
+                this.pagesize = val;
+                this.getData();
             },
-            handleSelect(item) {
-                console.log(item);
-            },
-            selsChange(sels){
-                this.sels=sels;
-            },
-            handleSizeChange(val){
-                this.pagesize=val
-            },
-            handleCurrentChange(val){
-                this.currentPage=val;
-            },
-            searchKey(){},
-            handleAdd(){
-                this.checkVisible=true;
-                // this.$router.push({
-                //         path: 'wemanageInfo'//带参数跳转内链页面，必须首先在router的index.js中进行配置。
-                //     }
-                // )
-            },
-            deleteFileOrDirectory(sels){},
-            refresh(){},
-            checkInfo(index,row){},
-            handleEdit(index,row){},
-            handleDel(index,row){},
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.getData();
+            }
         }
     }
 </script>
 
 <style scoped>
-  .table{
+  .top-tool-wrap {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+  .left-table-label{
+      font-size: 20px;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      font-weight: 700;
+  }
+  .left-table-label .label-text {
+      font-size: 18px;
+  }
+  .right-handle-box {
+    position: relative;
+    height: 40px;
     width: 100%;
+    background: #fafafa;
+    text-align: left;
+    display: flex;
+    padding: 10px 20px;
     font-size: 14px;
-    background: #EFEFEF;
-    height: 570px;
   }
-  .table-label{
-    width: 12%;
-    height: 30px;
-    background: #EFEFEF;
+  .handle-content-select {
+    margin-left: 20px;
+    display: flex;
   }
-  .handle-box.top-select-box {
-    margin-bottom: 3px;
-    height: 30px;
-    width: 100%;
-    background: whitesmoke;
-    /*text-align: center;*/
-    /*height: 100%;*/
-    /*background:'#eef1f6'*/
+  .select-label {
+    margin: 10px 0 0 20px;
   }
-  .searchText{
-    width: 180px;
-    height: 30px;
-    margin-left: 570px;
+  .searchText {
+    width: 200px !important;
+    margin: 0 10px;
   }
-  .top{
-    float:left;
-    height:30px;
-    width: 50%;
-    text-align: right;
-    /*width: 350px;*/
-  }
-  .bottom{
-    float:left;
-    margin-left:20px;
-    height: 30px;
-    /*width: 350px;*/
-    width: 40%;
-  }
-  .clear{
-    clear: both;
+  .searchBtn {
+    height: 40px;
   }
   .bottom-top{
     float: left;

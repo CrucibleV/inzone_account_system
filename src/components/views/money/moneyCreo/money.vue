@@ -32,7 +32,7 @@
       <el-table-column prop="gysbm" label="供应商编码" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="pp" label="品牌" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="bzsr" label="本周收入" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="bzsr" label="本周收入" width="100px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="zfsxf" label="支付手续费" width="100px" align="center"></el-table-column>
       <el-table-column prop="lpftze" label="礼品分摊总额" width="110px" align="center"></el-table-column>
       <el-table-column prop="yhqftze" label="优惠券分摊总额" width="120px" align="center"></el-table-column>
