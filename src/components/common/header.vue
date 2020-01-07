@@ -1,7 +1,7 @@
 <template>
     <div class="header">
       <div class="right">
-        <div class="header-1" style="width: 100%;height: 60px;margin-top: 5px">
+        <div class="header-1" style="width: 100%;height: 60px;">
           <div class="right22">
             <el-dropdown>
             <span class="el-dropdown-link">
@@ -61,21 +61,21 @@
             loginOut(){
                 var is_loginout = confirm("您确定要退出吗？")
                 if(is_loginout){
-                    this.$router.replace('/login');//跳转到指定的URL
+                    this.$router.replace('/login');   // 跳转到指定的URL
                     axios({
                         method: 'post',
-                        url: 'http://211.87.227.223:8082/admin/logout',
+                        url: this.$store.state.UrlIP + '/admin/logout',
                         params:{
                             token: localStorage.getItem("Authorization"),
                         },
                         headers:{
                             'Content-type':'application/x-www-form-urlencoded'
                         }
-                    }).then(res=>{
+                    }).then(res => {
+                        localStorage.removeItem("Authorization");
+                        localStorage.removeItem('PermissionList');
                         this.$router.replace('/login')
-                        localStorage.removeItem("Authorization")
-
-                    }).catch(error=>{
+                    }).catch(error => {
                         console.log(error)
                     })
                 }
@@ -84,66 +84,57 @@
     }
 </script>
 <style scoped>
-  .span-1{
-    width: 50%;
-    float: left;
-    color: white;
-    font-size: 16px;
-    text-align: right;
-  }
+    .span-1{
+      width: 50%;
+      float: left;
+      color: white;
+      font-size: 16px;
+      text-align: right;
+    }
     .header {
-        width: 100%;
-        height: 60px;
+          width: 100%;
+          height: 60px;
     }
     .header-user-con{
-        display: flex;
-        height: 60px;
-        align-items: center;
+          display: flex;
+          height: 60px;
+          align-items: center;
     }
-    .user-name{
-        margin-left: 10px;
+      .user-name{
+          margin-left: 10px;
+      }
+      .el-dropdown-link {
+          color: #fff;
+          font-size: 16px;
+      }
+    .right{
+      float: left;
+      width: 100%;
+      height: 60px;
+      background: #012f6d;
     }
-    .el-dropdown-link {
-        color: #fff;
-        font-size: 16px;
+    .right22{
+      float: right;
+      width: 15%;
+      height: 60px;
+      line-height: 60px;
+      text-align: right;
+      margin-right: 20px;
     }
-  .right{
-    float: left;
-    width: 100%;
-    height: 60px;
-    background: #0E528A;
-    /*background: #0E528A;*/
-  }
-  .right22{
-    float: right;
-    width: 15%;
-    height: 60px;
-    line-height: 60px;
-    text-align: right;
-  }
-  .class-icon{
-    float: left;
-    height: 60px;
-    line-height: 60px;
-    width: 100%;
-    /*text-align: left;*/
-    background: url(../../assets/images/1.png) no-repeat;
-  }
-  .class-text{
-    float: left;
-    height: 60px;
-    line-height: 60px;
-    width: 65%;
-    font-weight: bold;
-    margin-top: 20px;
-  }
+    .class-text{
+      float: left;
+      height: 60px;
+      line-height: 60px;
+      width: 65%;
+      font-weight: bold;
+      margin-top: 20px;
+    }
 
-  .right-left-2{
-    width: 20%;
-    /*background: red;*/
-    height: 60px;
-    float: left;
-  }
+    .right-left-2{
+      width: 20%;
+      height: 60px;
+      float: left;
+    }
 
   .right11{
     margin-top: 5px;
@@ -166,6 +157,6 @@
       font-family: "楷体";
     }
   .header-1{
-    background: url(../../assets/images/banner2.png) no-repeat ;
+    background: url(../../assets/images/banner-account.png) no-repeat ;
   }
 </style>
