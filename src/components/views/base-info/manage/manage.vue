@@ -1,72 +1,87 @@
 <template>
-  <div class="top">
-    <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">商位管理信息列表</span>
+  <div class="table">
+    <div class="left-table-label">
+        <i class="el-icon-menu"></i>
+        <span class="label-text">商位信息列表</span>
     </div>
-    <div class="handle-box top-select-box clear">
-      <div class="top1-top">
-        <el-input class="searchText" v-model="tableData.shopLocation" placeholder="请输入门店名称"></el-input>
-        <el-button size="mini" class="primaty-top" type="primary" icon="el-icon-search" @click="searchKey"><span style="font-size: 12px">查询</span></el-button>
-      </div>
-      <div class="bottom">
-        <el-button size="mini" type="success" icon="el-icon-plus" class="bottom-top" suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增门店</span></el-button>
-        <el-button size="mini" type="danger" icon="el-icon-delete" class="bottom-top" @click="deleteFileOrDirectory(sels)"><span style="font-size: 12px">删除</span></el-button>
-        <el-button size="mini" type="warning" class="bottom-top"><i class="el-icon-download"></i>导入</el-button>
-        <el-button size="mini" type="success" class="bottom-top"><i class="el-icon-upload2"></i>导出</el-button>
-        <el-button size="mini" type="warning" icon="el-icon-refresh" class="bottom-top"><span style="font-size: 12px" @click="refresh">刷新</span></el-button>
+    <div class="top-tool-wrap">
+      <div class="right-handle-box">
+        <el-input class="searchText"  v-model="search"  placeholder="输入供应商编码或名称或商位编码"></el-input>
+        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
+          <span style="font-size: 12px">查询</span>
+        </el-button>
+
+        <!-- <el-button class="searchBtn" size="medium" type="success" icon="el-icon-plus"  suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增门店</span></el-button> -->
+        
+        <!-- <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="getData">
+          <span style="font-size: 12px">导出EXCEL</span>
+        </el-button>
+        <el-button class="searchBtn" size="medium" type="warning" icon="el-icon-upload2" @click="getData">
+          <span style="font-size: 12px">提交审核</span>
+        </el-button> -->
       </div>
     </div>
 
-      <el-table :data="tables.slice((currentPage-1)*pagesize,currentPage*pagesize)" border @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
-        <el-table-column type="selection" width="55px" align="center"></el-table-column>
-        <el-table-column prop="index1" label="ID" width="90px" align="center"  :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="shopLocation" label="商铺" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="shop" label="所在门店" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="floor" label="所在楼层" width="120px" align="center"></el-table-column>
-        <el-table-column prop="goodLocation" label="所在货区" width="145px" align="center"></el-table-column>
-        <el-table-column prop="shopArea" label="商铺面积" width="120px" align="center"></el-table-column>
-        <el-table-column prop="meatial" label="材质" width="120px" align="center"></el-table-column>
-        <el-table-column prop="shopStyle" label="风格" width="120px" align="center"></el-table-column>
-        <el-table-column prop="brand" label="品牌" width="120px" align="center"></el-table-column>
-        <el-table-column label="操作"  align="center">
-          <template slot-scope="scope">
+    <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
+      <el-table-column type="selection" width="55px"></el-table-column>
+      <!-- <el-table-column prop="index1" label="ID" width="50px" align="center"  :show-overflow-tooltip="true"></el-table-column> -->
+        <!-- <el-table-column prop="shopLocation" label="商铺" align="center" :show-overflow-tooltip="true"></el-table-column> -->
+        <el-table-column prop="shop" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="lonDong" label="所在楼栋"  align="center"></el-table-column>
+        <el-table-column prop="floor" label="所在楼层"  align="center"></el-table-column>
+        <el-table-column prop="quoCodeName" label="供应商编码名称" align="center"></el-table-column>
+        <el-table-column prop="quoCode" label="商位编码" align="center"></el-table-column>
+        <el-table-column prop="goodLocation" label="货区编码" align="center"></el-table-column>
+        <!-- <el-table-column prop="shopArea" label="商铺面积" width="120px" align="center"></el-table-column> -->
+        <!-- <el-table-column prop="wechat" label="企业微信联系人"  align="center"></el-table-column> -->
+        <el-table-column prop="lastMod" label="最后修改时间" align="center"></el-table-column>
+        <!-- <el-table-column prop="brand" label="品牌" width="120px" align="center"></el-table-column> -->
+        <el-table-column label="操作"  align="center" width="200px" >
+          <template slot-scope="scope" >
             <!--              type="text"代表文字按钮-->
-            <el-button size="mini" type="success" @click="checkInfo(scope.$index, scope.row)">查看</el-button>
-            <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="success" plain @click="checkInfo(scope.$index, scope.row)">查看</el-button>
+            <!-- <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button> -->
+            <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="footer">
+      <div class="pagination">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
         </el-pagination>
       </div>
 
 
-
-
 <!--      当addVisible为true的时候，就弹出添加框-->
-      <el-dialog title="添加商位" :visible.sync="addVisible" width="25%" >
-        <el-form ref="fromName" :model="fromName" label-width="75px" :rules="rules2" class="demo-ruleForm">
-          <el-form-item label="商铺" prop="shopLocation">
+      <el-dialog title="添加商位" :visible.sync="addVisible" width="40%" >
+        <el-form ref="fromName" :model="fromName" label-width="120px" :rules="rules2" class="demo-ruleForm">
+          <!-- <el-form-item label="商铺" prop="shopLocation">
             <el-input v-model="fromName.shoplocation" placeholder="请输入商铺名称" clearable></el-input>
-          </el-form-item>
+          </el-form-item> -->
 
           <el-form-item label="门店" prop="shop">
             <el-input v-model="fromName.shop" placeholder="请输入门店名称" clearable></el-input>
           </el-form-item>
-
-          <el-form-item label="楼层" prop="floorName">
-            <el-input v-model="fromName.floorName" placeholder="请输入楼层" clearable></el-input>
+          <el-form-item label="楼栋" prop="lonDong">
+            <el-input v-model="fromName.lonDong" placeholder="请输入楼栋" clearable></el-input>
           </el-form-item>
-
-          <el-form-item label="货区" prop="goodLocation">
+          <el-form-item label="楼层" prop="floor">
+            <el-input v-model="fromName.floor" placeholder="请输入楼层" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="供应商编码名称" prop="quoCodeName">
+            <el-input v-model="fromName.quoCodeName" placeholder="请输入供应商编码名称" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="商位编码" prop="quoCode">
+            <el-input v-model="fromName.quoCode" placeholder="请输入商位编码" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="货区编码" prop="goodLocation">
             <el-input v-model="fromName.goodlocation" placeholder="请输入货区编码" clearable></el-input>
           </el-form-item>
-
-          <el-form-item label="面积" prop="shopArea">
+          <el-form-item label="最后修改时间" prop="lastMod">
+            <el-input v-model="fromName.lastMod" placeholder="请输入修改时间" clearable></el-input>
+          </el-form-item>
+          <!-- <el-form-item label="面积" prop="shopArea">
             <el-input v-model="fromName.shoparea" placeholder="请输入面积" clearable></el-input>
           </el-form-item>
 
@@ -80,7 +95,7 @@
 
           <el-form-item label="品牌" prop="brand">
             <el-input v-model="fromName.brand" placeholder="请输入品牌" clearable></el-input>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="addVisible = false">取 消</el-button>
@@ -91,8 +106,8 @@
 
 
 
-<!--      当editVisible为true的时候，就弹出编辑框-->
-      <el-dialog title="编辑" :visible.sync="editVisible" width="25%" >
+      <!--      当editVisible为true的时候，就弹出编辑框-->
+      <!-- <el-dialog title="编辑" :visible.sync="editVisible" width="25%" >
         <el-form ref="fromName" :model="fromName" label-width="75px">
           <el-form-item label="商铺">
             <el-input v-model="fromName.shoplocation" clearable></el-input>
@@ -130,7 +145,7 @@
           <el-button @click="editVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveEdit">确 定</el-button>
         </span>
-      </el-dialog>
+      </el-dialog> -->
 
 
 
@@ -165,106 +180,146 @@
                 tableData:[
                     {
                         index1:1,
-                        shopLocation:'法莱文商铺',
-                        shop:'银座家居中心店',
+                        shop:'法莱文商铺',
+                        //shop:'银座家居中心店',
+                        lonDong:'独栋',
                         floor:'2F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'091-2-B1-047',
-                        shopArea:'200平方',
-                        meatial:'防水',
-                        shopStyle:'日系',
-                        brand:'法莱文'
+                        lastMod:'2020-01-07',
+                        // shopArea:'200平方',
+                        // meatial:'防水',
+                        // shopStyle:'日系',
+                        // brand:'法莱文'
                     },
                     {
                         index1:2,
-                        shopLocation:'大成商铺',
-                        shop:'银座家居北园店',
+                        shop:'大成商铺',
+                        //shop:'银座家居北园店',
+                        lonDong:'独栋',
                         floor:'3F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'041-2-B1-047',
-                        shopArea:'100平方米',
-                        meatial:'塑胶',
-                        shopStyle:'田园',
-                        brand:'大成'
+                        lastMod:'2020-01-07',
+                        // shopArea:'100平方米',
+                        // meatial:'塑胶',
+                        // shopStyle:'田园',
+                        // brand:'大成'
                     },
                     {
                         index1:3,
-                        shopLocation:'泰尔玛商铺',
-                        shop:'银座家居临沂店',
+                        shop:'泰尔玛商铺',
+                        //shop:'银座家居临沂店',
+                        lonDong:'独栋',
                         floor:'1F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'111',
-                        shopArea:'50平方米',
-                        meatial:'防水',
-                        shopStyle:'欧美',
-                        brand:'泰尔玛'
+                        lastMod:'2020-01-07',
+                        // shopArea:'50平方米',
+                        // meatial:'防水',
+                        // shopStyle:'欧美',
+                        // brand:'泰尔玛'
                     },
                     {
                         index1:4,
-                        shopLocation:'忆家商铺',
-                        shop:'银座家居菏泽店',
+                        shop:'忆家商铺',
+                        //shop:'银座家居菏泽店',
+                        lonDong:'独栋',
                         floor:'5F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'222',
-                        shopArea:'100平方米',
-                        meatial:'塑胶',
-                        shopStyle:'田园',
-                        brand:'忆家'
+                        lastMod:'2020-01-07',
+                        // shopArea:'100平方米',
+                        // meatial:'塑胶',
+                        // shopStyle:'田园',
+                        // brand:'忆家'
                     },
                     {
                         index1:5,
-                        shopLocation:'赛罗克商铺',
-                        shop:'银座家居滨州店',
+                        shop:'赛罗克商铺',
+                        lonDong:'独栋',
+                        //shop:'银座家居滨州店',
                         floor:'1F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'333',
-                        shopArea:'50平方米',
-                        meatial:'防水',
-                        shopStyle:'日系',
-                        brand:'赛罗克'
+                        lastMod:'2020-01-07',
+                        // shopArea:'50平方米',
+                        // meatial:'防水',
+                        // shopStyle:'日系',
+                        // brand:'赛罗克'
                     },
                     {
                         index1:6,
-                        shopLocation:'华宝利商铺',
-                        shop:'银座家居中心店',
+                        shop:'华宝利商铺',
+                        lonDong:'独栋',
+                        //shop:'银座家居中心店',
                         floor:'3F',
+                        quoCodeName:'',
+                        quoCode:'000501010001',
                         goodLocation:'444',
-                        shopArea:'100平方米',
-                        meatial:'塑胶',
-                        shopStyle:'欧美',
-                        brand:'华宝利'
+                        lastMod:'2020-01-07',
+                        // shopArea:'100平方米',
+                        // meatial:'塑胶',
+                        // shopStyle:'欧美',
+                        // brand:'华宝利'
                     }
                 ],
                 fromName:{
-                    shoplocation:'',
+                    //shoplocation:'',
                     shop:'',
-                    floorName:'',
+                    lonDong:'',
+                    floor:'',
+                    quoCodeName:'',
+                    quoCode:'',
                     goodlocation:'',
-                    shoparea:'',
-                    metaial:'',
-                    style:'',
-                    brand:''
+                    lastMod:'',
+                    // shoparea:'',
+                    // metaial:'',
+                    // style:'',
+                    // brand:''
                 },
                 rules2:{
-                    shopLocation:[
-                        {required:true,message:'商铺不能为空',trigger:'blur'}
-                    ],
+                    // shopLocation:[
+                    //     {required:true,message:'商铺不能为空',trigger:'blur'}
+                    // ],
                     shop:[
                         {required:true,message:'门店名称不能为空',trigger:'blur'}
                     ],
-                    floorName:[
+                    lonDong:[
+                        {required:true,message:'楼栋不能为空',trigger:'blur'}
+                    ],
+                    floor:[
                         {required:true,message:'楼层不能为空',trigger:'blur'}
                     ],
+                    quoCodeName:[
+                        {required:true,message:'供应商编码名称不能为空',trigger:'blur'}
+                    ],
+                    quoCode:[
+                        {required:true,message:'商位编码不能为空',trigger:'blur'}
+                    ],
                     goodLocation:[
-                        {required:true,message:'货区不能为空',trigger:'blur'}
+                        {required:true,message:'货区编码不能为空',trigger:'blur'}
                     ],
-                    shopArea:[
-                        {required:true,message:'面积不能为空',trigger:'blur'}
+                    lastMod:[
+                        {required:true,message:'修改时间不能为空',trigger:'blur'}
                     ],
-                    metaial:[
-                        {required:true,message:'材质不能为空',trigger:'blur'}
-                    ],
-                    style:[
-                        {required:true,message:'风格不能为空',trigger:'blur'}
-                    ],
-                    brand:[
-                        {required:true,message:'品牌不能为空',trigger:'blur'}
-                    ]
+                    // shopArea:[
+                    //     {required:true,message:'面积不能为空',trigger:'blur'}
+                    // ],
+                    // metaial:[
+                    //     {required:true,message:'材质不能为空',trigger:'blur'}
+                    // ],
+                    // style:[
+                    //     {required:true,message:'风格不能为空',trigger:'blur'}
+                    // ],
+                    // brand:[
+                    //     {required:true,message:'品牌不能为空',trigger:'blur'}
+                    // ]
                 }
             }
         },
@@ -474,60 +529,43 @@
 </script>
 
 <style scoped>
-  .top{
+  .top-tool-wrap {
+      width: 100%;
+      margin-bottom: 10px;
+  }
+  .left-table-label{
+      font-size: 20px;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      font-weight: 700;
+  }
+  .left-table-label .label-text {
+      font-size: 18px;
+  }
+  .right-handle-box {
+    position: relative;
+    height: 40px;
     width: 100%;
-    font-size: 14px;
-    background: #EFEFEF;
-    height: 570px;
-  }
-  .footer {
-    margin-top: 10px;
-  }
-  .el-pagination{
-    text-align: right;
-  }
-  .table-label{
-    width: 10%;
-    height: 30px;
-  }
-  .handle-box.top-select-box {
-    margin-bottom: 3px;
-    height: 30px;
-    width: 100%;
-    background: whitesmoke;
-  }
-  .select-input-wrapper {
-    margin-bottom: 20px;
+    background: #fafafa;
     text-align: left;
+    display: flex;
+    padding: 10px 20px;
+    font-size: 14px;
   }
-  .del-dialog-cnt{
-    font-size: 16px;
-    text-align: center
+  .handle-content-select {
+    margin-left: 20px;
+    display: flex;
   }
-  .searchText{
-    width: 180px;
-    height: 30px;
-    margin-left: 570px;
+  .select-label {
+    margin: 10px 0 0 20px;
   }
-  .top1-top{
-    float:left;
-    height:30px;
-    width: 50%;
-    text-align: right;
-    /*width: 350px;*/
+  .searchText {
+    width: 200px !important;
+    margin: 0 10px;
   }
-  .bottom{
-    float:left;
-    margin-left:20px;
-    height: 30px;
-    /*width: 350px;*/
-    width: 40%;
-  }
-  .clear{
-    clear:both;
-  }
-  .el-table--enable-row-hover .el-table__body tr:hover>td {
-    background-color: #FFEBCD;
+  .searchBtn {
+    height: 40px;
   }
   .bottom-top{
     float: left;
