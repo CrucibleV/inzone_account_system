@@ -80,14 +80,6 @@ const router = new Router({
           },
         },
         {
-          path: 'store',
-          component: resolve=>require(['../components/views/store/store.vue'], resolve),
-          meta:{
-            title:'商铺信息管理',
-            // requiresAuth: true
-          }
-        },
-        {
           path: 'billSummary',
           component: resolve=>require(['../components/views/bill/billSummary.vue'], resolve),
           meta:{
@@ -129,47 +121,6 @@ const router = new Router({
           component: resolve=>require(['../components/views/base-info/quankou/moneyJuan.vue'], resolve),
           meta:{
             title:'劵扣管理',
-            // requiresAuth: true
-          }
-        },
-        {
-          path: 'location1',
-          component: resolve=>require(['../components/views/location/messageLocation.vue'], resolve),
-          meta:{
-            title:'信息管理',
-            // requiresAuth: true
-          }
-        },
-        {
-          path: '/cost1',
-          component: resolve=>require(['../components/views/costCenter/solidMoney/cost.vue'], resolve),
-          meta:{
-            title:'定额费用查询',
-            // requiresAuth: true
-          }
-        },
-        {
-          path: '/cost2',
-          component: resolve=>require(['../components/views/costCenter/giftMoney/giftMoney.vue'], resolve),
-          meta:{
-            title:'礼品费查询',
-            // requiresAuth: true
-          }
-        },
-        {
-          path: '/cost3',
-          component: resolve=>require(['../components/views/costCenter/juanMoney/juanMoney.vue'], resolve),
-          meta:{
-            title:'电子券扣点查询',
-            // requiresAuth: true
-          }
-        },
-
-        {
-          path: '/statistic',
-          component: resolve=>require(['../components/views/statistic/statistic.vue'], resolve),
-          meta:{
-            title:'报表中心',
             // requiresAuth: true
           }
         },
