@@ -11,7 +11,6 @@
       </el-breadcrumb>
     </div>
 
-
     <div class="body">
       <div class="body-left">
         <span style="font-size: 18px;float: left">编号：</span>

@@ -118,17 +118,9 @@ const router = new Router({
           }
         },{
           path: 'moneyJuan',
-          component: resolve=>require(['../components/views/money/moneyJuan/moneyJuan.vue'], resolve),
+          component: resolve=>require(['../components/views/base-info/quankou/moneyJuan.vue'], resolve),
           meta:{
             title:'劵扣管理',
-            // requiresAuth: true
-          }
-        },
-        {
-          path: 'juanInfo',
-          component: resolve=>require(['../components/views/money/moneyJuan/juanInfo.vue'], resolve),
-          meta:{
-            title:'新增劵扣管理',
             // requiresAuth: true
           }
         },
