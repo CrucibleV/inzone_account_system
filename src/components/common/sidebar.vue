@@ -2,9 +2,11 @@
   <div class="sidebar">
     <el-menu class="sidebar-el-menu" :default-active="onRoutes" :collapse="collapse" background-color="#0E528A"
              text-color="#FFFFFF" active-text-color="#20a0ff" unique-opened router >
-      <el-menu-item>功能菜单<span style="float: right">
-        <i  class="el-icon-d-arrow-left" style="font-size: 12px;text-align: right"></i>
-      </span></el-menu-item>
+      <el-menu-item :index="items[0].index">功能菜单
+        <span style="float: right">
+          <i  class="el-icon-d-arrow-left" style="font-size: 12px;text-align: right"></i>
+        </span>
+      </el-menu-item>
       <template v-for="item in items">
         <!--如果item对象的subs不为空，则执行v-if指令，否则执行v-else指令-->
         <template v-if="item.subs">
@@ -82,7 +84,10 @@
                             },
                             {
                                 index:'billSummary',
-                                title:'交易扣款周汇总'
+                                title:'商位交易扣款汇总'
+                            },{
+                                index:'billSupplierSummary',
+                                title:'供应商交易扣款汇总'
                             },{
                                 index:'billSummaryExamine',
                                 title:'交易扣款审核'
@@ -171,7 +176,5 @@
   .el-submenu__title i {
     color: white;
   }
-  .el-menu-item.is-active {
-    background: #1e3c65 !important;
-  }
+
 </style>

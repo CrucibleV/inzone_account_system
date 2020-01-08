@@ -11,7 +11,7 @@
       <el-table-column prop="oldPassword" label="密码" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="操作" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="updateInfo(scope.$index, scope.row)">修改</el-button>
         </template>
       </el-table-column>
