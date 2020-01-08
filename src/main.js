@@ -22,6 +22,8 @@ Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.use(Vuex)
 
+import Blob from './vendor/Blob'
+import Export2Excel from './vendor/Export2Excel'
 Vue.config.productionTip = false
 import './assets/icon/iconfont.css';
 

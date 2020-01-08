@@ -1,6 +1,6 @@
 /* eslint-disable */
 require('script-loader!file-saver');
-require('script-loader!src/vendor/Blob');
+require('./Blob.js');
 require('script-loader!xlsx/dist/xlsx.core.min');
 
 function generateArray(table) {
@@ -121,23 +121,63 @@ export function export_table_to_excel(id) {
 function formatJson(jsonData) {
   console.log(jsonData)
 }
-
-export function export_json_to_excel(th, jsonData, defaultTitle) {
-
+export function export_json_to_excel({
+                                       header,
+                                       data,
+                                       filename,
+                                       autoWidth = true,
+                                       bookType=  'xlsx'
+                                     } = {}) {
   /* original data */
-
-  var data = jsonData;
-  data.unshift(th);
+  filename = filename || 'excel-list'
+  data = [...data]
+  data.unshift(header);
   var ws_name = "SheetJS";
+  var wb = new Workbook(),
+    ws = sheet_from_array_of_arrays(data);
 
-  var wb = new Workbook(), ws = sheet_from_array_of_arrays(data);
-
+  if (autoWidth) {
+    /*设置worksheet每列的最大宽度*/
+    const colWidth = data.map(row => row.map(val => {
+      /*先判断是否为null/undefined*/
+      if (val == null) {
+        return {
+          'wch': 10
+        };
+      }
+      /*再判断是否为中文*/
+      else if (val.toString().charCodeAt(0) > 255) {
+        return {
+          'wch': val.toString().length * 2
+        };
+      } else {
+        return {
+          'wch': val.toString().length
+        };
+      }
+    }))
+    /*以第一行为初始值*/
+    let result = colWidth[0];
+    for (let i = 1; i < colWidth.length; i++) {
+      for (let j = 0; j < colWidth[i].length; j++) {
+        if (result[j]['wch'] < colWidth[i][j]['wch']) {
+          result[j]['wch'] = colWidth[i][j]['wch'];
+        }
+      }
+    }
+    ws['!cols'] = result;
+  }
 
   /* add worksheet to workbook */
   wb.SheetNames.push(ws_name);
   wb.Sheets[ws_name] = ws;
 
-  var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: false, type: 'binary'});
-  var title = defaultTitle || '列表'
-  saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), title + ".xlsx")
+  var wbout = XLSX.write(wb, {
+    bookType: bookType,
+    bookSST: false,
+    type: 'binary'
+  });
+  saveAs(new Blob([s2ab(wbout)], {
+    type: "application/octet-stream"
+  }), `${filename}.${bookType}`);
 }

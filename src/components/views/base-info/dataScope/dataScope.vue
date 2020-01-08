@@ -8,32 +8,37 @@
     <div class="top-tool-wrap">
       <div class="right-handle-box">
         <div class="handle-box-loc handle-date-select">
-          <span>推送日期选择：</span>
-          <el-date-picker v-model="value2" type="daterange" align="right"
+          <span>日期范围选择：</span>
+          <el-date-picker v-model="value2" type="daterange" align="center"
                       unlink-panels range-separator="至"
                       start-placeholder="开始日期" end-placeholder="结束日期"
-                      :picker-options="pickerOptions">
+                      :picker-options="pickerOptions" @change="getDateTime">
           </el-date-picker>
         </div>
         <span class="select-label">查询条件:</span>
-        <el-input class="searchText" v-if="supplier.name!=''" v-model="search"  placeholder="请输入推送微信"></el-input>
+        <el-input class="searchText" v-if="tableData.shopID!=''" v-model="tableData.shopID"  placeholder="请输入门店ID"></el-input>
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
+        </el-button>
+
+        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-plus"  suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增数据</span></el-button>
+        <el-button class="searchBtn" size="medium" type="warning" :loading="downloadLoading" icon="el-icon-upload2" @click="handleDownload">
+          <span style="font-size: 12px">导出EXCEL</span>
         </el-button>
       </div>
     </div>
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column prop="ROW_ID" label="ID" width="70px" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBID" label="推送日期" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBCNAME" label="任务名称" width="200px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID1" label="审核时间" width="80px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID2" label="推送人" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBWMID3" label="推送情况" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="SBSTATUS" label="说明" width="90px" align="center"></el-table-column>
-      <el-table-column prop="SBWMID4" label="操作" width="80px" align="center"></el-table-column>
-      <el-table-column label="操作" width="250px" fixed="right" align="center">
+      <el-table-column prop="dataName" label="数据名称" align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间" align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="shopID" label="门店ID"  align="center"  :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="floorID" label="楼层ID"  align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="manageID" label="商位ID"  align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column label="操作" width="250px"  align="center">
         <template slot-scope="scope">
+          <el-button size="mini" type="success" plain @click="checkInfo(scope.$index, scope.row)">查看</el-button>
+          <el-button size="mini" type="primary" plain  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -45,31 +50,71 @@
     </div>
 
     <!-- 查看弹框 -->
-    <el-dialog title="供应商信息详情" :visible.sync="selVisible" width="600px" >
+    <el-dialog title="数据信息详情" :visible.sync="selVisible" width="480px" >
       <el-form ref="form" :model="form" label-width="85px" >
-        <el-form-item label="供应商ID" >
-          <el-input v-model="form.SBID" style="width: 420px;margin-left: 20px;" disabled clearable></el-input>
+        <el-form-item label="数据名称：" >
+          <el-input v-model="form.dataName" style="width: 300px;margin-left: 20px;" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="供应商名称" >
-          <el-input v-model="form.SBCNAME" style="width: 420px;margin-left: 20px" disabled clearable></el-input>
+        <el-form-item label="创建时间：" >
+          <el-input v-model="form.createTime" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="供应商分类" >
-          <el-input v-model="form.SBCATCODE" style="width: 420px;margin-left: 20px" disabled clearable></el-input>
+        <el-form-item label="门店ID：" >
+          <el-input v-model="form.shopID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="录入时间">
-          <el-input v-model="form.SBLRRQ" style="width: 420px;margin-left: 20px" disabled clearable></el-input>
+        <el-form-item label="楼层ID：">
+          <el-input v-model="form.floorID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
-        <el-form-item label="地区代码">
-          <el-input v-model="form.SBREGCODE" style="width: 420px;margin-left: 20px" disabled clearable></el-input>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-input v-model="form.SBSTATUS" style="width: 420px;margin-left: 20px" disabled clearable></el-input>
+        <el-form-item label="商位ID：">
+          <el-input v-model="form.manageID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button @click="selVisible = false">取 消</el-button>
         </span>
     </el-dialog>
+
+
+    <!--编辑框-->
+    <el-dialog title="编辑数据信息" :visible.sync="editVisible" width="480px" >
+      <el-form ref="form" :model="form" label-width="75px">
+        <el-form-item label="数据名称:" >
+          <el-input v-model="form.dataName" style="width: 300px;margin-left: 20px;" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间:" >
+          <el-date-picker type="date" v-model="form.createTime" style="width: 300px;margin-left: 20px;" clearable></el-date-picker>
+        </el-form-item>
+        <el-form-item label="门店ID:" >
+       <!--为el-select添加filterable属性，可以实现启用搜索功能-->
+          <el-select v-model="form.shopID" style="width: 300px;margin-left: 20px;" filterable  clearable>
+            <el-option value="002"  ></el-option>
+            <el-option value="003" ></el-option>
+            <el-option value="004" ></el-option>
+            <el-option value="005" ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="楼层ID:">
+          <el-select v-model="form.floorID" style="width: 300px;margin-left: 20px;" filterable clearable>
+            <el-option value="1002" ></el-option>
+            <el-option value="1003" ></el-option>
+            <el-option value="1004" ></el-option>
+            <el-option value="1005" ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商位ID:">
+          <el-select v-model="form.manageID" style="width: 300px;margin-left: 20px;" filterable clearable>
+            <el-option value="1002"></el-option>
+            <el-option value="1003" ></el-option>
+            <el-option value="1004" ></el-option>
+            <el-option value="1005" ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="selVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveUpdate">确 定</el-button>
+      </span>
+    </el-dialog>
+
 
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="deleteVisible" width="300px" center>
@@ -89,7 +134,34 @@
         name: "wechat-history",
         data() {
             return {
-                tableData: [],
+                tableData: [
+                  {
+                    ROW_ID:1,
+                    dataName:"2019/9/12-2019/10/12的销售明细",
+                    createTime:"2019/9/12",
+                    shopID:"001",
+                    floorID:"101",
+                    manageID:"111"
+                  },
+                  {
+                    ROW_ID:2,
+                    dataName:"2019/3/16-2019/8/22的销售明细",
+                    createTime:"2019/3/16",
+                    shopID:"002",
+                    floorID:"102",
+                    manageID:"112"
+                  },
+                  {
+                    ROW_ID:3,
+                    dataName:"2019/5/12-2019/10/19的销售明细",
+                    createTime:"2019/5/12",
+                    shopID:"003",
+                    floorID:"103",
+                    manageID:"113"
+                  },
+                ],
+              downloadLoading: false,
+                value2:"",
                 totalCount: 0,
                 sels:'',
                 currentPage: 1,
@@ -103,12 +175,12 @@
                 msg: '',
                 search:'',  //搜索关键字相关信息
                 form: {
-                    SBID: '',
-                    SBCNAME: '',
-                    SBCATCODE: '',
-                    SBLRRQ: '',
-                    SBREGCODE: '',
-                    SBSTATUS: ''
+                  ROW_ID:"",
+                  dataName:"",
+                  createTime:"",
+                  shopID:"",
+                  floorID:"",
+                  manageID:""
                 }
             }
         },
@@ -118,9 +190,39 @@
         },
 
         methods: {
+          /**
+           * 当选中时间之后，就筛选时间范围*/
+          getDateTime(val){
+            console.log(val);
+            // var _time=
+          },
+
+
+        /**将数据导出execl表
+         * */
+          handleDownload() {
+            this.downloadLoading = true;
+            import('../../../../vendor/Export2Excel').then(excel => {
+              const tHeader = ['ID', '数据名称', '创建时间', '门店ID', '楼层ID', '商位ID']//头
+              const filterVal = ['ROW_ID', 'dataName', 'createTime', 'shopID', 'floorID', 'manageID']//值
+              const data = this.formatJson1(filterVal, this.tableData);
+              excel.export_json_to_excel({
+                header: tHeader,
+                data,
+                filename: '数据范围基本信息',
+              })
+            })
+            this.downloadLoading = false
+          },
+          formatJson1(filterVal, jsonData) {
+            return jsonData.map(v=>filterVal.map(j=>v[j]))
+          },
+
+          /**
+           * 初始化数据*/
             getData() {
                 axios({
-                    url: this.$store.state.UrlIP_ERP + "",
+                    url: this.$store.state.UrlIP + "",
                     method: "post",
                     params: {
                         // token: localStorage.getItem("Authorization"),
@@ -158,15 +260,61 @@
                 this.msg = row;
                 console.log(row);
                 this.form = {
-                    SBID: this.msg.SBID,
-                    SBCNAME: this.msg.SBCNAME,
-                    SBCATCODE: this.msg.SBCATCODE,
-                    SBREGCODE: this.msg.SBREGCODE,
-                    SBLRRQ: this.msg.SBLRRQ,
-                    SBSTATUS: this.msg.SBSTATUS,
+                  ROW_ID: this.msg.ROW_ID,
+                  dataName: this.msg.dataName,
+                  createTime: this.msg.createTime,
+                  shopID: this.msg.shopID,
+                  floorID: this.msg.floorID,
+                  manageID: this.msg.manageID,
                 }
                 this.selVisible = true;
             },
+
+           /**
+            * 编辑按钮
+            * */
+
+          handleEdit(index,row){
+             this.ind=index;
+             this.msg=row;
+             this.form = {
+               ROW_ID: this.msg.ROW_ID,
+               dataName: this.msg.dataName,
+               createTime: this.msg.createTime,
+               shopID: this.msg.shopID,
+               floorID: this.msg.floorID,
+               manageID: this.msg.manageID,
+             }
+             this.editVisible=true;
+          },
+
+          saveUpdate(){
+            var dName=this.form.dataName;
+            var cTime=this.form.createTime;
+            var sID=this.form.shopID;
+            var fID=this.form.floorID;
+            var mID=this.form.manageID;
+            console.log(dName+cTime+sID+fID+mID);
+            axios({
+              url:this.$store.state.UrlIP+'',
+              method:'post',
+              params: {
+                dataName:dName,
+                createTime:cTime,
+                shopID:sID,
+                floorID:fID,
+                manageID:mID
+              },
+              headers: {
+                'Content-type': 'application/x-www-form-urlencoded'
+              },
+            }).then(res=>{
+              this.$message.success("编辑成功");
+            }).catch(error=>{
+              alert("编辑失败");
+            })
+          },
+
 
             handleDelete(index,row){
                 this.ind=index;
