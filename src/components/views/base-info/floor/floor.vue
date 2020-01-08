@@ -43,8 +43,6 @@
 
 
 
-
-
 <!--    当selVisible为true的时候，就弹出查看框-->
     <el-dialog title="查看详细信息" :visible.sync="selVisible" width="20%" >
       <el-form ref="form" :model="form" label-width="85px" >
