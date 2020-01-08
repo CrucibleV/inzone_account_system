@@ -24,7 +24,7 @@
       <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="name" label="角色名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="description" label="角色描述" align="center" :show-overflow-tooltip="true">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.name=='系统管理员'">后台系统最高权限的管理员</font>
           <font v-else-if="scope.row.name=='楼层管理员'">该楼层所有信息的增删改查</font>
           <font v-else-if="scope.row.name=='门店管理员'">该门店所有信息的增删改查</font>
@@ -32,13 +32,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.status=='停用'" color="red">停用</font>
           <font v-else color="green">正常</font>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.status=='停用'">
             <el-button size="mini" type="primary" @click="updateInfo(scope.$index, scope.row)">修改</el-button>
             <el-button  size="mini" type="success" @click="startInfo(scope.$index, scope.row)">启用</el-button>

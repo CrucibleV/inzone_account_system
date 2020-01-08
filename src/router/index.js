@@ -83,7 +83,15 @@ const router = new Router({
           path: 'billSummary',
           component: resolve=>require(['../components/views/bill/billSummary.vue'], resolve),
           meta:{
-            title:'扣款汇总',
+            title:'商位汇总',
+            // requiresAuth: true
+          }
+        },
+        {
+          path: 'billSupplierSummary',
+          component: resolve=>require(['../components/views/bill/billSupplierSummary.vue'], resolve),
+          meta:{
+            title:'供应商汇总',
             // requiresAuth: true
           }
         },

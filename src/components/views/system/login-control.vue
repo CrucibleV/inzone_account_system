@@ -22,7 +22,7 @@
       <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="account" label="登录账号" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="nicheng" label="昵称" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.account=='admin'">超级管理员</font>
           <font v-else-if="scope.row.account=='floor'">楼层员</font>
           <font v-else-if="scope.row.account=='shop'">门店员</font>
@@ -30,7 +30,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="role" label="角色" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.account=='admin'">系统管理员</font>
           <font v-else-if="scope.row.account=='floor'">楼层管理员</font>
           <font v-else-if="scope.row.account=='shop'">门店管理员</font>
@@ -40,14 +40,14 @@
       <el-table-column prop="creTime" label="创建时间" align="center"></el-table-column>
       <el-table-column prop="lastTime" label="最近登陆时间" align="center"></el-table-column>
       <el-table-column prop="status " label="状态" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.status=='正常'" color="green">正常</font>
 
           <font v-else color="red">停用</font>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <font v-if="scope.row.status=='停用'">
             <el-button size="mini" type="primary" @click="updateInfo(scope.$index, scope.row)">修改</el-button>
             <el-button :class="{active:show==1}" size="mini" type="success" @click="startInfo(scope.$index, scope.row)">启用</el-button>
