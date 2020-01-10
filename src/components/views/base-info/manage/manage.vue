@@ -23,12 +23,11 @@
         <el-table-column prop="quoCode" label="商位编码" align="center"></el-table-column>
         <el-table-column prop="goodLocation" label="货区编码" align="center"></el-table-column>
         <el-table-column prop="lastMod" label="最后修改时间" align="center"></el-table-column>
-        <el-table-column label="操作"  align="center" width="200px" >
+        <!-- <el-table-column label="操作"  align="center" width="200px" >
           <template slot-scope="scope" >
-            <!--              type="text"代表文字按钮-->
             <el-button size="mini" type="success" plain @click="checkInfo(scope.$index, scope.row)">查看</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
 
       <div class="pagination">
