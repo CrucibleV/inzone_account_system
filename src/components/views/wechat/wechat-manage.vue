@@ -307,8 +307,11 @@
     background: #fafafa;
     text-align: left;
     display: flex;
-    padding: 10px 20px;
+    padding: 10px 0;
     font-size: 14px;
+  }
+  .handle-date-select {
+    margin-left: 20px;
   }
   .handle-content-select {
     margin-left: 20px;
