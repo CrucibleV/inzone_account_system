@@ -64,14 +64,6 @@ const router = new Router({
           },
         },
         {
-          path:'floorInfo',
-          component: resolve=>require(['../components/views/base-info/floor/floorInfo.vue'],resolve),
-          meta:{
-            title: '楼层货区详细信息',
-            // requiresAuth: true
-          },
-        },
-        {
           path:'manageInfo',
           component: resolve=>require(['../components/views/base-info/manage/manageInfo.vue'],resolve),
           meta:{
