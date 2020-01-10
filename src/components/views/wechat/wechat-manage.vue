@@ -14,7 +14,7 @@
         </div>
         <span class="select-label">查询条件:</span>
         <el-input class="searchText"  v-model="search"  placeholder="请输入推送微信"></el-input>
-        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
+        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData()">
           <span style="font-size: 12px">查询</span>
         </el-button>
         <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="getData">
@@ -117,6 +117,8 @@
         name: "money",
         data() {
             return {
+                startDate: '',
+                endDate: '',
                 tableData: [
                   {
                     index: 1,
@@ -219,7 +221,9 @@
                         // token: localStorage.getItem("Authorization"),
                         pageIndex: this.currentPage,
                         pageSize: this.pagesize,
-                        keyword: this.search
+                        keyword: this.search,
+                        startDate: this.startDate,
+                        endDate: this.endDate
                     },
                     headers: {
                         'Content-type': 'application/x-www-form-urlencoded'
