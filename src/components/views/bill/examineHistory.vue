@@ -5,17 +5,22 @@
         class="el-icon-menu"
         style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"
       ></i>
-      <p
-        style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left"
-      >交易扣款审核历史</p>
+      <p class="pageTitle">交易扣款审核历史</p>
     </div>
 
     <div class="handle-box top-select-box clear">
       <div class="top">
         <span>审核时间范围:</span>
-        <el-date-picker type="date" v-model="date1" placeholder="起始时间" style="width: 18%"></el-date-picker>
-        <span>-</span>
-        <el-date-picker type="date" v-model="date2" placeholder="终止时间" style="width: 18%"></el-date-picker>
+        <el-date-picker
+          v-model="searchDateTime"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
         <span class="searchcondi">查询条件:</span>
         <el-input class="searchText" placeholder="请输入返款编号"></el-input>
         <el-button
@@ -50,7 +55,6 @@
       :cell-style="{padding:'0px'}"
       :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}"
     >
-      <!-- 自定义求和函数:summary-method="getSummaries" -->
       <el-table-column type="selection" width="55px" align="center"></el-table-column>
       <el-table-column
         prop="id"
@@ -116,8 +120,6 @@ export default {
   data() {
     return {
       sels: "",
-      date1: "",
-      date2: "",
       currentPage: 1,
       pagesize: 10,
       tableData: [
@@ -149,7 +151,32 @@ export default {
           auditperson: "张三",
           audittime: "2020-01-01"
         }
-      ]
+      ],
+      searchDateTime: "",
+      pickerOptions: {
+        //时间选择快捷选项
+        shortcuts: [
+          {
+            text: "上一周",
+            onClick(picker) {
+              let nowTime = new Date().getTime(); //时间戳
+              let nowDay = new Date().getDay(); //获取星期几（0、1、2、3、4、5、6）
+              let oneDayTime = 24 * 60 * 60 * 1000;
+              let startT = null;
+              let endT = null;
+              if (nowDay > 0) {
+                startT = nowTime - oneDayTime * (nowDay + 7 - 1 - 0); //上周周一
+                endT = nowTime - oneDayTime * (nowDay + 7 - 1 - 6); //上周周日
+              } else {
+                //如果是周日
+                startT = nowTime - oneDayTime * (nowDay + 7 + 7 - 1 - 0); //上周周一
+                endT = nowTime - oneDayTime * (nowDay + 7 + 7 - 1 - 6); //上周周日
+              }
+              picker.$emit("pick", [startT, endT]);
+            }
+          }
+        ]
+      }
     };
   },
   mounted: function() {
@@ -180,7 +207,10 @@ export default {
     selsChange(sels) {
       this.sels = sels;
     },
-    checkInfo() {},
+    checkInfo(row) {
+      //带参转发，参数表：
+      //带什么参数？？？？
+    },
     handleEdit() {},
     handleDelete() {},
     handleSizeChange(val) {
@@ -209,10 +239,11 @@ export default {
   height: 30px;
 }
 .handle-box.top-select-box {
-  margin-bottom: 3px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
   height: 40px;
   width: 100%;
-  background: whitesmoke;
+  background: #fafafa;
 }
 .select-input-wrapper {
   margin-bottom: 20px;
@@ -251,5 +282,12 @@ export default {
 }
 .bottom-top {
   float: left;
+}
+.pageTitle {
+  font-size: 18px;
+  height: 30px;
+  line-height: 30px;
+  font-weight: bold;
+  text-align: left;
 }
 </style>

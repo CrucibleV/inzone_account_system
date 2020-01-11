@@ -1,408 +1,376 @@
 <template>
   <div class="table">
-    <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">供应商信息列表</span>
+    <div class="table-label">
+      <i
+        class="el-icon-menu"
+        style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"
+      ></i>
+      <p
+        style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left"
+      >供应商联系人</p>
     </div>
 
     <div class="handle-box top-select-box clear">
       <div class="top">
-        <el-input class="searchText" v-if="supplier.name!=''" v-model="supplier.name"  placeholder="请输入供应商姓名"></el-input>
-        <el-button size="mini" class="primaty-top" type="primary" icon="el-icon-search" @click="searchKey"><span style="font-size: 12px">查询</span></el-button>
-      </div>
-      <div class="bottom">
-        <el-button size="mini" type="success" icon="el-icon-plus" class="bottom-top" suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增门店</span></el-button>
-        <el-button size="mini" type="danger" icon="el-icon-delete" class="bottom-top" @click="deleteFileOrDirectory(sels)"><span style="font-size: 12px">删除</span></el-button>
-        <el-button size="mini" type="warning" class="bottom-top"><i class="el-icon-download"></i>导入</el-button>
-        <el-button size="mini" type="success" class="bottom-top"><i class="el-icon-upload2"></i>导出</el-button>
-        <el-button size="mini" type="warning" icon="el-icon-refresh" class="bottom-top"><span style="font-size: 12px" @click="refresh">刷新</span></el-button>
+        <span>查询条件:</span>
+        <el-input class="searchText" v-model="keyWord" placeholder="请输入供应商姓名"></el-input>
+        <el-button
+          size="mini"
+          class="topBtn"
+          type="primary"
+          icon="el-icon-search"
+          @click="searchKey"
+        >
+          <span style="font-size: 12px">查询</span>
+        </el-button>
+        <el-button size="mini" type="success" class="topBtn">
+          <i class="el-icon-upload2"></i>导出
+        </el-button>
+        <el-button size="mini" type="warning" icon="el-icon-refresh" class="topBtn">
+          <span style="font-size: 12px" @click="refresh">刷新</span>
+        </el-button>
       </div>
     </div>
 
-
-
-    <el-table :data="supplier.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%;" @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
-      <el-table-column type="selection" width="55px" align="center"></el-table-column>
-      <el-table-column prop="id" label="ID" width="110px" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="name" label="销售商名称"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="phone" label="手机号码"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="ctime" label="创建时间" align="center"></el-table-column>
-      <el-table-column prop="uptime" label="更新时间" align="center"></el-table-column>
+    <el-table
+      :data="supplier"
+      border
+      style="width: 100%;"
+      @selection-change="selsChange"
+      stripe
+      :row-style="{height:'45px'}"
+      highlight-current-row
+      :cell-style="{padding:'0px'}"
+      :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}"
+    >
+      <el-table-column
+        prop="MFPCODE,MUCNAME"
+        label="门店"
+        width="150px"
+        align="center"
+        :show-overflow-tooltip="true"
+      >
+        <template slot-scope="scope">[{{scope.row.MFPCODE}}] {{scope.row.MUCNAME}}</template>
+      </el-table-column>
+      <el-table-column
+        prop="FLOOR,MFCNAME"
+        label="商场"
+        width="200px"
+        align="center"
+        :show-overflow-tooltip="true"
+      >
+        <template slot-scope="scope">[{{scope.row.FLOOR}}] {{scope.row.MFCNAME}}</template>
+      </el-table-column>
+      <el-table-column
+        prop="SUPID,SBCNAME"
+        label="供应商"
+        align="center"
+        :show-overflow-tooltip="true"
+      >
+        <template slot-scope="scope">[{{scope.row.SUPID}}] {{scope.row.SBCNAME}}</template>
+      </el-table-column>
+      <el-table-column prop="WxUserID1" label="企业联系人1" align="center">
+        <template slot-scope="scope">
+          <font v-if="scope.row.WxUserID1===null">无</font>
+          <font v-else>{{scope.row.WxUserID1}}</font>
+        </template>
+      </el-table-column>
+      <el-table-column prop="WxUserID2" label="企业联系人2" align="center">
+        <template slot-scope="scope">
+          <font v-if="scope.row.WxUserID2===null">无</font>
+          <font v-else>{{scope.row.WxUserID2}}</font>
+        </template>
+      </el-table-column>
+      <el-table-column prop="UpdateTime" label="录入日期" align="center">
+        <template slot-scope="scope">
+          <font v-if="scope.row.UpdateTime===null">无</font>
+          <font v-else>{{scope.row.UpdateTime}}</font>
+        </template>
+      </el-table-column>
+      <el-table-column prop="SBCATCODE" label="供应商类型" align="center"></el-table-column>
+      <!-- <el-table-column prop="status" label="状态" align="center"></el-table-column> -->
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="success" @click="checkInfo(scope.$index, scope.row)">查看</el-button>
-          <el-button size="mini" type="primary"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-
-
     <div class="pagination">
       <!--     el-pagination新增分页   -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                     :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="supplier.length">
-      </el-pagination>
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10,20]"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="totalCount"
+      ></el-pagination>
     </div>
 
-
-
-
-<!--    当selVisible为true的时候，就弹出查看框-->
-    <el-dialog title="查看详细信息" :visible.sync="selVisible" width="20%" >
-      <el-form ref="form" :model="form" label-width="85px" >
-        <el-form-item label="销售商姓名" >
-          <el-input v-model="form.name" style="width: 220px;margin-left: 20px;" disabled='true'  clearable></el-input>
+    <!--添加微信弹框-->
+    <el-dialog title="编辑微信" :visible.sync="editVisible" width="20%">
+      <el-form ref="form" :model="form" label-width="95px" class="demo-ruleForm">
+        <el-form-item label="企业联系人1">
+          <el-select v-model="form.wechat1" clearable placeholder="请选择">
+            <el-option
+              v-for="item in wechatoptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+            <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
+          </el-select>
         </el-form-item>
-        <el-form-item label="手机号" >
-          <el-input v-model="form.phone" style="width: 220px;margin-left: 20px" disabled='true' clearable></el-input>
-        </el-form-item>
-        <el-form-item label="状态" >
-          <el-input v-model="form.status" style="width: 220px;margin-left: 20px" disabled='true' clearable></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间">
-          <el-input v-model="form.ctime" style="width: 220px;margin-left: 20px" disabled='true' clearable></el-input>
-        </el-form-item>
-        <el-form-item label="更新时间">
-          <el-input v-model="form.uptime" style="width: 220px;margin-left: 20px" disabled='true' clearable></el-input>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
-
-
-
-<!--当addVisible为true的时候，就弹出添加框-->
-    <el-dialog title="添加销售商信息" :visible.sync="addVisible" width="20%">
-      <el-form ref="form" :model="form" label-width="95px" :rules="rules2" class="demo-ruleForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入销售商姓名" style="width: 210px;margin-left: 20px" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入电话号码" style="width: 210px;margin-left: 20px" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间" prop="ctime">
-          <el-col :span="10">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.ctime" style="width: 145%;margin-left: 22px" clearable></el-date-picker>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="更新时间" prop="uptime">
-          <el-col :span="10">
-            <el-date-picker type="date" placeholder="选择日期" v-model="form.uptime" style="width: 145%;margin-left: 22px" clearable></el-date-picker>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="form.status" placeholder="请选择时间" style="margin-left: 20px;width: 210px" clearable>
-            <el-option label="正常" value="zhengchang"></el-option>
-            <el-option label="停用" value="zanting"></el-option>
+        <el-form-item label="企业联系人2">
+          <el-select v-model="form.wechat2" clearable placeholder="请选择">
+            <el-option
+              v-for="item in wechatoptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+            <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
           </el-select>
         </el-form-item>
       </el-form>
-
       <span slot="footer" class="dialog-footer">
-          <el-button @click="addVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveAdd">确 定</el-button>
-        </span>
+        <el-button type="primary" @click="saveEdit">确 定</el-button>
+        <el-button @click="editVisible = false">取 消</el-button>
+      </span>
     </el-dialog>
-
-
-
-
-
-
-<!--    当editVisible为true的时候，就弹出添加框-->
-    <el-dialog title="编辑销售商信息" :visible.sync="editVisible" width="20%">
-      <el-form ref="form" :model="form" label-width="87px" >
-        <el-form-item label="销售商姓名:">
-          <el-input v-model="form.name" style="width: 215px;margin-left: 20px" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="form.phone" style="width: 210px;margin-left: 20px" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间:">
-          <el-col :span="10">
-            <el-date-picker type="date" v-model="form.ctime" style="width: 145%;margin-left: 22px" clearable></el-date-picker>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="更新时间:">
-          <el-col :span="10">
-            <el-date-picker type="date" v-model="form.uptime" style="width: 145%;margin-left: 22px" clearable></el-date-picker>
-          </el-col>
-        </el-form-item>
-        <el-form-item label="状态:">
-          <el-select v-model="form.status" style="margin-left: 20px;width: 215px" clearable>
-            <el-option label="正常" value="zhengchang"></el-option>
-            <el-option label="停用" value="zanting"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-
-      <span slot="footer" class="dialog-footer">
-          <el-button @click="addVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
-        </span>
+    <el-dialog title="详细信息" :visible.sync="selVisible" width="20%">
+      <span>查看详细信息</span>
     </el-dialog>
-
-
-
-
-
-
-
-    <!-- 删除提示框 -->
-    <el-dialog title="提示" :visible.sync="deleteVisible" width="300px" center>
-      <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-      <span slot="footer" class="dialog-footer">
-          <el-button @click="delVisible = false">取 消</el-button>
-          <el-button type="primary" @click="deleteRow">确 定</el-button>
-        </span>
-    </el-dialog>
-
-
   </div>
 </template>
 
 <script>
-  import axios from 'axios'
-    export default {
-        name: "supplier",
-        data(){
-            return{
-                sels:'',
-                currentPage:1,
-                pagesize:10,
-                addVisible:false,
-                deleteVisible:false,
-                editVisible:false,
-                selVisible:false,
-                // name:'',
-                // ctime:'',
-                // uptime:'',
-                // status:'',
-                supplier:[],
-                ind:1,
-                msg:'',
-                form:{
-                    phone:'',
-                    name:'',
-                    ctime:'',
-                    uptime:'',
-                    status:''
-                },
-                rules2:{
-                    name:[
-                        {required:true,message:'销售者姓名不能为空',trigger:'blur'}
-                    ],
-                    ctime:[
-                        {required:true,message:'创建时间不能为空',trigger:'blur'}
-                    ],
-                    uptime:[
-                        {required:true,message:'更新时间不能为空',trigger:'blur'}
-                    ],
-                    status:[
-                        {required:true,message:'状态不能为空',trigger:'blur'}
-                    ],
-                    phone:[
-                        {required:true,message:'状态不能为空',trigger:'blur'}
-                    ]
-                },
-            }
+import axios from "axios";
+export default {
+  name: "supplier",
+  data() {
+    return {
+      sels: "",
+      currentPage: 1,
+      pageSize: 10,
+      totalCount: 0,
+      editVisible: false,
+      selVisible: false,
+      keyWord: "",
+      // "SUPID": "供应商编号",
+      // "SBCNAME": "供应商名称",
+      // "MFPCODE": "门店编号",
+      // "MUCNAME": "门店名称",
+      // "FLOOR": "商场编号",
+      // "MFCNAME": "商场名称",
+      // "SBCATCODE": "供应商类型编码"
+      // "ROW_ID":
+      // "WxUserID1": "微信联系人1"
+      // "WxUserID2": "微信联系人2"
+      // "UpdateTime": "录入日期"
+      supplier: [],
+      ind: 1,
+      msg: "",
+      form: {
+        wechat1: "",
+        wechat2: ""
+      },
+      wechatoptions: [
+        {
+          value: "option1",
+          label: "微信1"
         },
-        mounted:function(){
-            axios.get('/api/supplier').then(res=>{
-                let res1 = res.data;
-                 if(res1.code==0){
-                     this.supplier=res1.supplier
-                 }
-
-            })
+        {
+          value: "option2",
+          label: "微信2"
         },
-        methods:{
-
-
-            //查询，根据姓名进行模糊查询
-            searchKey(){   //注意，方法中的方法名不能喝data中的属性重名
-                let _key=this.supplier.name.toLowerCase();
-                // console.log(_key)
-                let newList=[];//声明一个新的数组，用于存放查询出来的数据，进行页面展示
-                if (_key){
-                    this.supplier.filter(item=>{
-                        if (item.name.toLowerCase().indexOf(_key)!==-1){
-                            newList.push(item)
-                        }
-                    })
-                }
-                this.supplier=newList
-            },
-            handleAdd(){
-                this.form={
-                    id:'',
-                    name:'',
-                    ctime:'',
-                    uptime:'',
-                    status:''
-                }
-                this.addVisible=true;
-            },
-            deleteFileOrDirectory(val){},
-            refresh(){},
-            selsChange(sels){
-                this.sels = sels
-            },
-            checkInfo(index,row){
-                this.ind=index;
-                this.msg=row;
-                this.form={
-                    phone:this.msg.phone,
-                    name:this.msg.name,
-                    ctime:this.msg.ctime,
-                    uptime:this.msg.uptime,
-                    status:this.msg.status,
-                }
-                this.selVisible=true;
-            },
-            handleEdit(index,row){
-                this.ind=index;
-                this.msg=row;
-                this.form={
-                    phone:this.msg.phone,
-                    name:this.msg.name,
-                    ctime:this.msg.ctime,
-                    uptime:this.msg.uptime,
-                    status:this.msg.status,
-                };
-                this.editVisible=true;
-            },
-            handleDelete(index,row){
-                this.ind=index;
-                this.msg=row;
-                this.deleteVisible=true;
-            },
-            handleSizeChange(val){
-                this.pagesize=val;
-            },
-            handleCurrentChange(val){
-                this.currentPage=val;
-
-            },
-            deleteRow(){
-                this.deleteVisible=false;
-                axios.get('/api/delete',{
-                    params:{
-                        id:this.form.id
-                    }
-                }).then(res=>{
-                    this.supplier=res.data
-                })
-            },
-            saveAdd(){
-
-                axios.get('/api/addSupplier',{
-                    params:{
-                        name:'this.form.name',
-                        ctime:'this.form.ctime',
-                        uptime:'this.form.uptime',
-                        status:'this.form.status'
-                    }
-                }).then(res=>{
-                    console.log(res);
-                    this.supplier=res.data.supplier
-                })
-                // axios({
-                //     url:"http://211.87.227.223:8082/group/addGroup",
-                //     method:"post",
-                //     params:{
-                //         token: localStorage.getItem("Authorization"),//将token保存到本地
-                //         shopName: this.form.shopName,
-                //         address: this.form.address,
-                //         lnglat: this.form.lnglat,
-                //         phone:this.form.lnglat,
-                //         state:this.form.state
-                //     },
-                //     headers:{
-                //         'Content-type':'application/x-www-form-urlencoded'
-                //     }
-                // }).then(res=>{
-                //     this.getData();
-                //     this.$message.success('添加成功');
-                // }).catch(error=>{
-                //     console.log(error)
-                //     this.$message.success('添加失败');
-                // });
-                // this.addVisible= false;
-
-
-
-
-                // axios({
-                //     url:'/api/addSupplier',
-                //     methods: 'get',
-                //     params: {
-                //         name:this.form.name,
-                //         ctime:this.form.ctime,
-                //         uptime:this.form.uptime,
-                //         status:this.form.status
-                //     },
-                //     headers:{     //将表格转化为普通表格进行提交
-                //         'content-type':'application/x-www-form-urlencoded'
-                //     }
-                // }).then(res=>{
-                //     this.$message.success('添加成功')
-                // }).catch(error => {
-                //     console.log(error)
-                //     this.$message.success('添加失败')
-                // });
-                this.addVisible=false
-            },
-            saveEdit(){
-
-            },
+        {
+          value: "option3",
+          label: "微信3"
         }
+      ]
+    };
+  },
+  mounted: function() {
+    this.getTabledata();
+  },
+  methods: {
+    //获取列表数据
+    getTabledata() {
+      axios({
+        // 192.168.1.103:8201/shopPeople/getShopContact
+        url: "http://192.168.1.103:8201/shopPeople/getShopContact",
+        method: "get",
+        params: {
+          pageIndex: this.currentPage,
+          pageSize: this.pageSize,
+          keyWord: this.keyWord
+        },
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded"
+        }
+      })
+        .then(res => {
+          //   取数据
+          console.log(res.data);
+          if (res.data.code == "0") {
+            this.supplier = res.data.data;
+            this.totalCount = res.data.respPage.totalCount;
+          }
+          // console.log(this.supplier.length);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    //查询，根据姓名进行模糊查询
+    searchKey() {
+      //注意，方法中的方法名不能喝data中的属性重名
+      let _key = this.supplier.name.toLowerCase();
+      // console.log(_key)
+      let newList = []; //声明一个新的数组，用于存放查询出来的数据，进行页面展示
+      if (_key) {
+        this.supplier.filter(item => {
+          if (item.name.toLowerCase().indexOf(_key) !== -1) {
+            newList.push(item);
+          }
+        });
+      }
+      this.supplier = newList;
+    },
+    handleAdd() {
+      this.form = {
+        id: "",
+        name: "",
+        ctime: "",
+        uptime: "",
+        status: ""
+      };
+      this.addVisible = true;
+    },
+    deleteFileOrDirectory(val) {},
+    refresh() {},
+    selsChange(sels) {
+      this.sels = sels;
+    },
+    checkInfo(index, row) {
+      // this.ind = index;
+      // this.msg = row;
+      // this.form = {
+      //   phone: this.msg.phone,
+      //   name: this.msg.name,
+      //   ctime: this.msg.ctime,
+      //   uptime: this.msg.uptime,
+      //   status: this.msg.status
+      // };
+      this.selVisible = true;
+    },
+    handleEdit(index, row) {
+      this.ind = index;
+      this.msg = row;
+      this.editVisible = true;
+    },
+    handleDelete(index, row) {
+      this.ind = index;
+      this.msg = row;
+      this.deleteVisible = true;
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.getTabledata();
+      // console.log(`当前页：${val}`);
+      // console.log(this.currentPage);
+    },
+    deleteRow() {
+      this.deleteVisible = false;
+      axios
+        .get("/api/delete", {
+          params: {
+            id: this.form.id
+          }
+        })
+        .then(res => {
+          this.supplier = res.data;
+        });
+    },
+    saveEdit() {
+      // url:192.168.1.103:8201/shopPeople/updateContact
+      axios
+        .get("http://192.168.1.103:8201/shopPeople/updateContact", {
+          params: {
+            companyId: this.msg.FLOOR, //商场编号
+            supplierId: this.msg.SUPID,
+            wxUserID1: this.form.wechat1,
+            wxUserID2: this.form.wechat2
+          }
+        })
+        .then(res => {
+          console.log(res);
+          if (res.data.code == "0") {
+            this.$message({
+              message: res.data.msg,
+              type: "success"
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      this.getTabledata();
+      this.editVisible = false;
     }
+    // saveEdit() {}
+  }
+};
 </script>
 
 <style scoped>
-  .table{
-    width: 100%;
-    font-size: 14px;
-    background: #EFEFEF;
-    height: 570px;
-  }
-  .table-label{
-    width: 9%;
-    height: 30px;
-  }
-  .handle-box.top-select-box {
-    margin-bottom: 3px;
-    height: 30px;
-    width: 100%;
-    background: whitesmoke;
-  }
-  .searchText{
-    width: 180px;
-    height: 30px;
-    margin-left: 570px;
-  }
-  .top{
-    float:left;
-    height:30px;
-    width: 50%;
-    text-align: right;
-    /*width: 350px;*/
-  }
-  .bottom{
-    float:left;
-    margin-left:20px;
-    height: 30px;
-    /*width: 350px;*/
-    width: 40%;
-  }
-  .clear{
-    clear:both;
-  }
-  .bottom-top{
-    float: left;
-    margin-left: 20px;
-  }
+.table {
+  width: 100%;
+  font-size: 14px;
+  background: #efefef;
+  height: 570px;
+}
+.table-label {
+  width: auto;
+  height: 30px;
+}
+.handle-box.top-select-box {
+  height: 40px;
+  width: 100%;
+  background: #fafafa;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+.searchText {
+  width: 180px;
+  height: 30px;
+}
+.top {
+  float: left;
+  height: 40px;
+  width: 100%;
+  text-align: left;
+  /*width: 350px;*/
+}
+.topBtn {
+  height: 40px;
+  margin-left: 5px;
+}
+.bottom {
+  float: left;
+  margin-left: 20px;
+  height: 30px;
+  /*width: 350px;*/
+  width: 40%;
+}
+.clear {
+  clear: both;
+}
 </style>
