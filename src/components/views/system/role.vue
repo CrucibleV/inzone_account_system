@@ -17,19 +17,21 @@
 
 
     <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%"  @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
-      <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="roleName" label="角色名称" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="roleDescribe" label="角色描述" align="center" :show-overflow-tooltip="true">
+      <el-table-column prop="RoleID" label="ID" width="70px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="RoleName" label="角色名称" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="RoleDescription" label="角色描述" align="center" :show-overflow-tooltip="true">
       </el-table-column>
-      <el-table-column prop="roleStatus" label="状态" align="center" :show-overflow-tooltip="true">
+      <el-table-column prop="State" label="状态" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <font v-if="scope.row.roleStatus=='停用'" color="red">停用</font>
+          <font v-if="scope.row.State=='停用'" color="red">停用</font>
           <font v-else color="green">正常</font>
         </template>
       </el-table-column>
+      <el-table-column prop="CreateTime" label="创建时间" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="UpdateTime" label="更新时间" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <font v-if="scope.row.roleStatus=='停用'">
+          <font v-if="scope.row.State=='停用'">
             <el-button size="mini" type="primary" plain @click="updateInfo(scope.$index, scope.row)">修改</el-button>
             <el-button  size="mini" type="success" plain @click="startInfo(scope.$index, scope.row)">启用</el-button>
           </font>
@@ -61,6 +63,12 @@
           <textarea cols="10" rows="5" v-model="form.description"  style="width: 300px;margin-left: 20px" clearable></textarea>
         </el-form-item>
 
+        <el-form-item label="创建时间:" prop="ctime">
+          <el-date-picker v-model="form.ctime" type="datetime" style="width: 300px;margin-left: 20px" clearable></el-date-picker>
+        </el-form-item>
+        <el-form-item label="更新时间:" prop="uptime">
+          <el-date-picker v-model="form.uptima" type="datetime" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
+        </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-select v-model="form.status" placeholder="请选择" style="margin-left: 20px;width: 300px" clearable>
             <el-option label="正常" value="ok"></el-option>
@@ -84,7 +92,12 @@
         <el-form-item label="角色名称：" prop="name">
           <el-input v-model="form.name" placeholder="请输入角色名称" style="width: 300px;margin-left: 20px" clearable ></el-input>
         </el-form-item>
-
+        <el-form-item label="创建时间:" prop="ctime">
+          <el-date-picker v-model="form.ctime" type="datetime" placeholder="请输入创建时间" style="width: 300px;margin-left: 20px" clearable></el-date-picker>
+        </el-form-item>
+        <el-form-item label="更新时间:" prop="uptime">
+          <el-date-picker v-model="form.uptima" type="datetime" placeholder="请输入更新时间" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
+        </el-form-item>
         <el-form-item label="角色描述：" prop="description">
           <textarea cols="10" rows="5" v-model="form.description" placeholder="请输入角色描述" style="width: 300px;margin-left: 20px" clearable></textarea>
         </el-form-item>
@@ -120,44 +133,7 @@
             return{
                 addVisible:false,
                 updateVisible:false,
-                tableData:[
-                  {
-                    id:1,
-                    roleName:"门店管理员",
-                    roleDescribe:"该门店所有信息的增删改查",
-                    roleStatus:"正常",
-                  },
-                  {
-                    id:2,
-                    roleName:"楼层管理员",
-                    roleDescribe:"该楼层所有信息的增删改查",
-                    roleStatus:"停用",
-                  },
-                  {
-                    id:3,
-                    roleName:"商位管理员",
-                    roleDescribe:"该商位所有信息的增删改查",
-                    roleStatus:"停用",
-                  },
-                  {
-                    id:4,
-                    roleName:"系统管理员",
-                    roleDescribe:"后台系统最高权限的管理员",
-                    roleStatus:"正常",
-                  },
-                  {
-                    id:5,
-                    roleName:"总部管理员",
-                    roleDescribe:"管理总部消息",
-                    roleStatus:"正常",
-                  },
-                  {
-                    id:6,
-                    roleName:"维护管理员",
-                    roleDescribe:"维护系统的消息",
-                    roleStatus:"停用",
-                  },
-                ],
+                tableData:[],
                 currentPage :1,
                 pagesize:10 ,
                 sels:'',
@@ -167,6 +143,8 @@
                     name:'',
                     description:'',
                     status:'',
+                    ctime:'',
+                    uptime:'',
                 },
                 rules2:{
                     name:[
@@ -177,12 +155,46 @@
                     ],
                     status:[
                         {required:true,message:'状态不能为空',trigger:'blur'}
+                    ],
+                    ctime:[
+                      {required:true,message:'创建时间不能为空',trigger:'blur'}
+                    ],
+                    uptime:[
+                      {required:true,message:'更新时间不能为空',trigger:'blur'}
                     ]
+            
                 }
 
             }
         },
+        created(){
+          this.getRoleList();
+        },
         methods:{
+          /**
+           * 获取角色列表.
+           */
+          getRoleList(){
+            axios({
+              url:this.$store.state.urlIPs+'/getRoles',
+              method:"get",
+              params:{
+                pageIndex: 0,
+                pageSize: 0,
+              },
+              headers:{
+                'Content-type': 'application/x-www-form-urlencoded'
+              },
+              data:[]
+            }).then(res=>{
+              console.log(11111111);
+              this.tableData=res.data.data;
+            }).catch(error=>{
+              console.log(error);
+            })
+          },
+
+
           /**
            * 查询数据*/
           getData(){
@@ -218,16 +230,20 @@
             //     }
             //     this.tableData=newList;
             // },
+            /**
+             * 新增角色
+             */
             handleAdd(){
                 this.form={
                     name:'',
                     description: '',
-                    status: ""
+                    status: "",
+                    ctime:"",
+                    uptime:'',
                 }
                 this.addVisible=true;
             },
-            deleteFileOrDirectory(){},
-            refresh(){},
+            
             selsChange(sels){
                 this.sels=sels;
             },
@@ -241,9 +257,11 @@
                 this.index=index;
                 this.mes=row;
                 this.form={
-                    name:this.mes.roleName,
-                    description:this.mes.roleDescribe,
-                    status: this.mes.roleStatus
+                    name:this.mes.RoleName,
+                    description:this.mes.RoleDescription,
+                    status: this.mes.State,
+                    ctime:this.mes.CreateTime,
+                    uptime:this.mes.UpdateTime
                 };
                 this.updateVisible=true;
             },
@@ -263,15 +281,19 @@
               var rName=this.form.name;
               var rDescribe=this.form.description;
               var rStatus=this.form.status;
+              var rCtime=this.form.ctime;
+              var rUPtime=this.form.uptime;
               console.log(rName+","+rDescribe+","+rStatus);
               axios({
                 url: this.$store.state.UrlIP+"",
                 method:"post",
                 params: {
                   token:localStorage.getItem("Authorization"),
-                  roleName:rName,
-                  roleDescribe:rDescribe,
-                  roleStatus:rStatus
+                  RoleName:rName,
+                  RoleDescription:rDescribe,
+                  State:rStatus,
+                  CreateTime:rCtime,
+                  UpdateTime:rUPtime,
                 },
                 headers:{
                   'Content-type':'application/x-www-form-urlencoded'
@@ -286,15 +308,19 @@
               var rName=this.form.name;
               var rDescribe=this.form.description;
               var rStatus=this.form.status;
+              var rCtime=this.form.ctime;
+              var rUPtime=this.form.uptime;
               console.log(rName+","+rDescribe+","+rStatus);
               axios({
                 url:this.$store.state.UrlIP+"",
                 method:"post",
                 params:{
                   token:localStorage.getItem("Authorization"),
-                  roleName:rName,
-                  roleDescribe:rDescribe,
-                  roleStatus:rStatus
+                  RoleName:rName,
+                  RoleDescription:rDescribe,
+                  State:rStatus,
+                  CreateTime:rCtime,
+                  UpdateTime:rUPtime,
                 },
                 headers:{
                   'Content-type':'application/x-www-form-urlencoded'

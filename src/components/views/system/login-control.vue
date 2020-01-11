@@ -109,14 +109,14 @@
         </el-form-item>
         <el-form-item label="创建时间：" prop="ctime">
           <el-col :span="10">
-            <el-date-picker type="date"v-model="form.creTime" style="margin-left: 20px;width: 300px"  clearable></el-date-picker>
+            <el-date-picker type="date" v-model="form.creTime" style="margin-left: 20px;width: 300px"  clearable></el-date-picker>
           </el-col>
         </el-form-item>
         <el-form-item label="昵称：" prop="nicheng">
           <el-input v-model="form.nicheng" style="width: 300px;margin-left: 20px" clearable></el-input>
         </el-form-item>
         <el-form-item label="角色：" prop="role">
-          <el-select v-model="form.role"style="margin-left: 20px;width: 300px" clearable>
+          <el-select v-model="form.role" style="margin-left: 20px;width: 300px" clearable>
             <el-option label="系统管理员" value="system"></el-option>
             <el-option label="门店管理员" value="shop"></el-option>
             <el-option label="楼层管理员" value="floor"></el-option>
