@@ -17,7 +17,7 @@
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
-        <el-button class="searchBtn" size="medium" type="warning" icon="el-icon-upload2" @click="getData">
+        <el-button class="searchBtn" size="medium" type="warning" icon="el-icon-upload2" @click="handleData">
           <span style="font-size: 12px">提交审核</span>
         </el-button>
       </div>
@@ -367,7 +367,7 @@
                 this.currentPage=val;
             },
             //获取数据
-            getData(){    
+            getData(){
             }
         }
     }
