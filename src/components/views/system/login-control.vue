@@ -1,18 +1,17 @@
 <template>
   <div class="table">
     <div class="table-label"><i class="el-icon-menu" style="height: 30px;line-height: 30px;float: left;font-size: 20px;font-weight: bold"></i>
-      <span style="font-size: 16px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">管理员列表</span>
+      <span style="font-size: 18px;height: 30px;line-height: 30px;font-weight: bold;text-align: left">管理员列表</span>
     </div>
 
-    <div class="handle-box top-select-box clear">
-      <div class="top">
-        <el-input class="searchText" v-if="admin.account!==''" v-model="admin.account"  placeholder="请输入登录账号"></el-input>
-        <el-button size="mini" class="primaty-top" type="primary" icon="el-icon-search" @click="searchKey"><span style="font-size: 12px">查询</span></el-button>
-      </div>
-      <div class="bottom">
-        <el-button size="mini" type="success" icon="el-icon-plus" class="bottom-top" suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增管理员</span></el-button>
-        <el-button size="mini" type="danger" icon="el-icon-delete" class="bottom-top" @click="deleteFileOrDirectory(sels)"><span style="font-size: 12px">删除</span></el-button>
-        <el-button size="mini" type="warning" icon="el-icon-refresh" class="bottom-top"><span style="font-size: 12px" @click="refresh">刷新</span></el-button>
+    <div class="top-tool-wrap">
+      <div class="right-handle-box">
+        <el-input class="searchText"    placeholder="请输入角色名称"></el-input>
+        <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
+          <span style="font-size: 12px">查询</span>
+        </el-button>
+
+        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-plus"  suffix-icon="add" @click="handleAdd"><span style="font-size: 12px">新增角色</span></el-button>
       </div>
     </div>
 
@@ -20,41 +19,24 @@
     <el-table :data="admin.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%;" @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column type="selection" align="center"></el-table-column>
       <el-table-column prop="id" label="ID" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="account" label="登录账号" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="nicheng" label="昵称" align="center">
+      <el-table-column prop="userName" label="用户名" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="loginTime" label="登录时间" align="center"></el-table-column>
+      <el-table-column prop="status" label="登录结果" align="center">
         <template slot-scope="scope">
-          <font v-if="scope.row.account=='admin'">超级管理员</font>
-          <font v-else-if="scope.row.account=='floor'">楼层员</font>
-          <font v-else-if="scope.row.account=='shop'">门店员</font>
-          <font v-else>商位员</font>
+          <font v-if="scope.row.status=='停用'" color="red">停用</font>
+          <font v-else color="green">正常</font>
         </template>
       </el-table-column>
-      <el-table-column prop="role" label="角色" align="center">
-        <template slot-scope="scope">
-          <font v-if="scope.row.account=='admin'">系统管理员</font>
-          <font v-else-if="scope.row.account=='floor'">楼层管理员</font>
-          <font v-else-if="scope.row.account=='shop'">门店管理员</font>
-          <font v-else>商位管理员</font>
-        </template>
-      </el-table-column>
-      <el-table-column prop="creTime" label="创建时间" align="center"></el-table-column>
       <el-table-column prop="lastTime" label="最近登陆时间" align="center"></el-table-column>
-      <el-table-column prop="status " label="状态" align="center">
-        <template slot-scope="scope">
-          <font v-if="scope.row.status=='正常'" color="green">正常</font>
-
-          <font v-else color="red">停用</font>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <font v-if="scope.row.status=='停用'">
-            <el-button size="mini" type="primary" @click="updateInfo(scope.$index, scope.row)">修改</el-button>
-            <el-button :class="{active:show==1}" size="mini" type="success" @click="startInfo(scope.$index, scope.row)">启用</el-button>
+            <el-button size="mini" type="primary" plain @click="updateInfo(scope.$index, scope.row)">修改</el-button>
+            <el-button :class="{active:show==1}" size="mini" type="success" plain @click="startInfo(scope.$index, scope.row)">启用</el-button>
           </font>
           <font v-else>
-            <el-button size="mini" type="primary" @click="updateInfo(scope.$index, scope.row)">修改</el-button>
-            <el-button :class="{active:show==2}" size="mini" type="danger" @click="stopInfo(scope.$index, scope.row)">停用</el-button>
+            <el-button size="mini" type="primary" plain @click="updateInfo(scope.$index, scope.row)">修改</el-button>
+            <el-button :class="{active:show==2}" size="mini" type="danger" plain @click="stopInfo(scope.$index, scope.row)">停用</el-button>
           </font>
         </template>
       </el-table-column>
@@ -178,7 +160,22 @@
                 stop:false,
                 show:'',
                 sels:'',
-                admin:[],
+                admin:[
+                  {
+                    id:1,
+                    userName:"admin",
+                    loginTime:"2019-12-12",
+                    status:"正常",
+                    lastTime:"2020-01-01"
+                  },
+                  {
+                    id:2,
+                    userName:"shopAdmin",
+                    loginTime:"2019-12-12",
+                    status:"停用",
+                    lastTime:"2020-02-02"
+                  },
+                ],
                 currentPage:1,
                 pagesize:10,
                 addVisible:false,
@@ -214,20 +211,6 @@
                     ]
                 }
             }
-        },
-        mounted:function(){
-            axios({
-                url:'/api/admin',
-                method:'get',
-                params:[],
-            }).then(res=>{
-                console.log('111111111111')
-                if (res.data.code=='0'){
-                    this.admin=res.data.Admin;
-                }else{
-                    alert('请求失败')
-                }
-            })
         },
         methods:{
             searchKey(){
@@ -306,7 +289,7 @@
     height: 870px;
   }
   .table-label{
-    width: 9%;
+    width: 6%;
     height: 30px;
     background: #EFEFEF;
   }
@@ -342,5 +325,26 @@
   .bottom-top{
     float: left;
     margin-left: 20px;
+  }
+  .top-tool-wrap {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .right-handle-box {
+    position: relative;
+    height: 40px;
+    width: 100%;
+    background: #fafafa;
+    text-align: left;
+    display: flex;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  .searchBtn {
+    height: 40px;
+  }
+  .searchText {
+    width: 200px !important;
+    margin: 0 10px;
   }
 </style>

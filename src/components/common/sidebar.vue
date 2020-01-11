@@ -176,7 +176,5 @@
   .el-submenu__title i {
     color: white;
   }
-  .el-menu-item.is-active {
-    background: #1e3c65 !important;
-  }
+
 </style>
