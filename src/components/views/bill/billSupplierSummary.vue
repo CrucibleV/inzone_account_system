@@ -17,7 +17,7 @@
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
-        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="getData">
+        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="exportDataToExcel">
           <span style="font-size: 12px">导出EXCEL</span>
         </el-button>
         <el-button class="searchBtn" size="medium" type="warning" icon="el-icon-upload2" @click="getData">
@@ -31,12 +31,12 @@
       <el-table-column prop="lc" label="楼层" align="center"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="gysbm" label="供应商编码" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pp" label="品牌" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="bzsr" label="本周收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="zfsxf" label="支付手续费(元)" width="100px" align="center"></el-table-column>
       <el-table-column prop="lpftze" label="礼品分摊总额(元)" width="110px" align="center"></el-table-column>
       <el-table-column prop="yhqftze" label="优惠券分摊总额(元)" width="120px" align="center"></el-table-column>
       <el-table-column prop="lcye" label="浪潮余额(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="fxyj" label="风险押金(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="hdgdfy" label="活动固定费用(元)" width="120px" align="center"></el-table-column>
       <el-table-column prop="kggf" label="扣广告费(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="kzj" label="扣租金(元)" width="90px" align="center"></el-table-column>
@@ -56,6 +56,8 @@
                      :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
+
+
   </div>
 </template>
 
@@ -97,7 +99,8 @@
                     zfsxf: '2000',
                     lpftze: '10000',
                     yhqftze: '10780',
-                    lcye: '',
+                    lcye: 122222,
+                    fxyj:0,
                     hdgdfy: '4000',
                     kggf: '5926',
                     kzj: '8900',
@@ -171,11 +174,24 @@
                 }
             }
         },
-
+        mounted(){
+            let nowTime = new Date().getTime()//时间戳
+            let nowDay = new Date().getDay()//获取星期几（0、1、2、3、4、5、6）
+            let oneDayTime = 24*60*60*1000
+            let startT = null
+            let endT = null
+            if(nowDay>0){
+              startT = nowTime-oneDayTime*(nowDay+7-1-0)//上周周一
+              endT = nowTime-oneDayTime*(nowDay+7-1-6)//上周周日
+            }else{//如果是周日
+              startT = nowTime-oneDayTime*(nowDay+7+7-1-0)//上周周一
+              endT = nowTime-oneDayTime*(nowDay+7+7-1-6)//上周周日
+            }
+            this.searchDateTime = [startT,endT]
+        },
         created() {
           // this.getData();
         },
-
         methods: {
             getData() {
                 axios({
@@ -224,7 +240,10 @@
                 };
                 this.editVisible=true;
             },
-            
+            // 导出数据为excel
+            exportDataToExcel(){
+
+            },
             /**
              * 查看本周汇总的明细
             */
