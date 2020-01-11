@@ -30,7 +30,12 @@
       <el-table-column prop="shTime" label="审核时间" width="120px" align="center"></el-table-column>
       <el-table-column prop="tsPerson" label="推送人" width="100px" align="center"></el-table-column>
       <el-table-column prop="tsTime" label="推送时间" width="120px" align="center"></el-table-column>
-      <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
+      <el-table-column prop="status" label="状态" width="100px" align="center">
+        <template slot-scope="scope">
+          <font v-if="scope.row.status==='发送成功'" color="green">发送成功</font>
+          <font v-else-if="scope.row.status==='发送失败'" color="red">发送失败</font>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="230px" fixed="right" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" plain @click="checkInfo(scope.$index, scope.row)">对账文件</el-button>
@@ -80,7 +85,7 @@
                     shTime: '2020年1月13日 13:40',
                     tsPerson: '赵真真',
                     tsTime: '2020年1月12日 09:40',
-                    status: '发送成功'
+                    status: '发送失败'
                   }
                 ],
                 totalCount: 2,

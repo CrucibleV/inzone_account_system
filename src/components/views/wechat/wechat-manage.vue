@@ -37,11 +37,17 @@
       <el-table-column prop="hdgdfy" label="审核时间" width="120px" align="center"></el-table-column>
       <el-table-column prop="kggf" label="企业微信管理员" width="90px" align="center"></el-table-column>
       <el-table-column prop="kzj" label="推送时间" width="90px" align="center"></el-table-column>
-      <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
+      <el-table-column prop="status" label="状态" width="100px" align="center">
+        <template slot-scope="scope">
+          <font v-if="scope.row.status==='审核通过'" color="green">审核通过</font>
+          <font v-else-if="scope.row.status==='审核未通过'" color="red">审核未通过</font>
+          <font v-else color="#808080">待审核</font>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="230px" fixed="right" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" plain @click="handleEdit(scope.$index, scope.row)">对账文件</el-button>
-          <el-button size="mini" type="success" plain @click="toSeeDetail(scope.$index, scope.row)">再次发送</el-button>
+          <el-button size="mini" type="primary" plain @click="checkInfo(scope.$index, scope.row)">对账文件</el-button>
+          <el-button size="mini" type="success" plain @click="sendAgain(scope.$index, scope.row)">再次发送</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -237,37 +243,20 @@
             },
 
             /**
-             * 详情与修改
+             * 对账文件（下载excel?）
             */
-            handleEdit(index,row){
-                this.ind=index;
-                this.msg=row;
-                this.form={
-                    lc: this.msg.lc,
-                    gysbm: this.msg.gysbm,
-                    gysmc: this.msg.gysmc,
-                    pp: this.msg.pp,
-                    bzsr: this.msg.bzsr,
-                    zfsxf: this.msg.zfsxf,
-                    lpftze: this.msg.lpftze,
-                    yhqftze: this.msg.yhqftze,
-                    lcye: this.msg.lcye,
-                    hdgdfy: this.msg.hdgdfy,
-                    kggf: this.msg.kggf,
-                    kzj: this.msg.kzj,
-                    qtkk: this.msg.qtkk,
-                    kksm: this.msg.kksm,
-                    sjfk:this.msg.sjfk,
-                    status: this.msg.status
-                };
-                this.editVisible=true;
+            checkInfo(index, row) {
+                // this.editVisible = true;
+                alert('是下载对应的excel??');
+                // this.ind=index;
+                // this.msg=row;
             },
             
             /**
-             * 查看本周汇总的明细
+             * 再次发送
             */
-            toSeeDetail(index,row) {
-              alert('正在开发... 将会查看本周汇总的明细!');
+            sendAgain(index,row) {
+              alert('正在开发...');
             },
 
             /**
