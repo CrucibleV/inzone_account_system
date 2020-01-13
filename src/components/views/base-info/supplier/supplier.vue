@@ -23,7 +23,13 @@
         >
           <span style="font-size: 12px">查询</span>
         </el-button>
-        <el-button size="mini" type="success" class="topBtn">
+        <el-button
+          size="mini"
+          type="success"
+          class="topBtn"
+          :loading="downloadLoading"
+          @click="getExcel"
+        >
           <i class="el-icon-upload2"></i>导出
         </el-button>
         <el-button size="mini" type="warning" icon="el-icon-refresh" class="topBtn">
@@ -110,17 +116,17 @@
       ></el-pagination>
     </div>
 
-    <!--添加微信弹框-->
+    <!-------------------------添加微信弹框---------------------------------------->
     <el-dialog title="编辑微信" :visible.sync="editVisible" width="20%">
       <el-form ref="form" :model="form" label-width="95px" class="demo-ruleForm">
         <el-form-item label="企业联系人1">
           <el-select v-model="form.wechat1" clearable placeholder="请选择">
             <el-option
               v-for="item in wechatoptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+              :key="item.userName"
+              :label="item.nickName"
+              :value="item.userName"
+            >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
             <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
           </el-select>
         </el-form-item>
@@ -128,10 +134,10 @@
           <el-select v-model="form.wechat2" clearable placeholder="请选择">
             <el-option
               v-for="item in wechatoptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+              :key="item.userName"
+              :label="item.nickName"
+              :value="item.userName"
+            >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
             <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
           </el-select>
         </el-form-item>
@@ -141,8 +147,52 @@
         <el-button @click="editVisible = false">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="详细信息" :visible.sync="selVisible" width="20%">
-      <span>查看详细信息</span>
+    <!-- ---------------------------------------------------------------------- -->
+
+    <!-- ---------------------------详细信息弹窗-------------------------------- -->
+    <el-dialog title="详细信息" :visible.sync="selVisible" width="500px">
+      <div class="shop-info-text">
+        <div class="box-title">交易基本信息</div>
+        <ul class="left-cont" :model="msg">
+          <li class="info-li">
+            <span style="font-weight:700">门店：</span>
+            [{{msg.MFPCODE}}] {{msg.MUCNAME}}
+          </li>
+          <li class="info-li">
+            <span style="font-weight:700">商场：</span>
+            [{{msg.FLOOR}}] {{msg.MFCNAME}}
+          </li>
+          <li class="info-li">
+            <span style="font-weight:700">供应商：</span>
+            [{{msg.SUPID}}] {{msg.SBCNAME}}
+          </li>
+
+          <li class="info-li">
+            <span style="font-weight:700">供应商类型：</span>
+            {{msg.SBCATCODE}}
+          </li>
+        </ul>
+      </div>
+      <div class="shop-info-text">
+        <div class="box-title">联系人信息</div>
+        <ul class="left-cont" :model="msg">
+          <li class="info-li">
+            <span style="font-weight:700">企业联系人1：</span>
+            <font v-if="msg.WxUserID1===null">无</font>
+            <font v-else>{{msg.WxUserID1}}</font>
+          </li>
+          <li class="info-li">
+            <span style="font-weight:700">企业联系人2：</span>
+            <font v-if="msg.WxUserID2===null">无</font>
+            <font v-else>{{msg.WxUserID2}}</font>
+          </li>
+          <li class="info-li">
+            <span style="font-weight:700">录入日期：</span>
+            <font v-if="msg.UpdateTime===null">无</font>
+            <font v-else>{{msg.UpdateTime}}</font>
+          </li>
+        </ul>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -178,31 +228,39 @@ export default {
         wechat1: "",
         wechat2: ""
       },
-      wechatoptions: [
-        {
-          value: "option1",
-          label: "微信1"
-        },
-        {
-          value: "option2",
-          label: "微信2"
-        },
-        {
-          value: "option3",
-          label: "微信3"
-        }
-      ]
+      wechatoptions: [],
+      downloadLoading: false,
+      exportSupplier: []
     };
   },
   mounted: function() {
     this.getTabledata();
+    this.getContactdata();
   },
   methods: {
+    //获取供应商联系方式
+    getContactdata() {
+      axios({
+        url: "http://192.168.1.103:8201/wechat/getAllUserByTagID",
+        method: "get",
+        params: {},
+        headers: {
+          "Content-type": "application/x-www-form-urlencoded"
+        }
+      })
+        .then(res => {
+          console.log(res.data);
+          this.wechatoptions = res.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     //获取列表数据
     getTabledata() {
       axios({
         // 192.168.1.103:8201/shopPeople/getShopContact
-        url: "http://192.168.1.103:8201/shopPeople/getShopContact",
+        url: "http://211.87.227.226:8201/shopPeople/getShopContact",
         method: "get",
         params: {
           pageIndex: this.currentPage,
@@ -215,7 +273,7 @@ export default {
       })
         .then(res => {
           //   取数据
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.code == "0") {
             this.supplier = res.data.data;
             this.totalCount = res.data.respPage.totalCount;
@@ -252,13 +310,85 @@ export default {
       this.addVisible = true;
     },
     deleteFileOrDirectory(val) {},
-    refresh() {},
+    refresh() {
+      this.getTabledata();
+    },
+    // getExportdata() {
+    //   axios({
+    //     // 192.168.1.103:8201/shopPeople/getShopContact
+    //     url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+    //     method: "get",
+    //     params: {
+    //       pageIndex: this.currentPage,
+    //       pageSize: 2000,
+    //       keyWord: this.keyWord
+    //     },
+    //     headers: {
+    //       "Content-type": "application/x-www-form-urlencoded"
+    //     }
+    //   })
+    //     .then(res => {
+    //       //   取数据
+    //       console.log(res.data);
+    //       if (res.data.code == "0") {
+    //         this.exportSupplier = res.data.data;
+    //         // this.totalCount = res.data.respPage.totalCount;
+    //       }
+    //       // console.log(this.supplier.length);
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+    getExcel() {
+      // this.getExportdata();
+      this.downloadLoading = true;
+      import("../../../../vendor/Export2Excel").then(excel => {
+        const tHeader = [
+          "行编号",
+          "供应商编号",
+          "供应商名称",
+          "门店编号",
+          "门店名称",
+          "商场编号",
+          "商场名称",
+          "供应商类型编码",
+          "微信联系人1",
+          "微信联系人2",
+          "录入日期"
+        ]; //头
+        const filterVal = [
+          "ROW_ID",
+          "SUPID",
+          "SBCNAME",
+          "MFPCODE",
+          "MUCNAME",
+          "FLOOR",
+          "MFCNAME",
+          "SBCATCODE",
+          "WxUserID1",
+          "WxUserID2",
+          "UpdateTime"
+        ]; //值
+        const data = this.formatJson1(filterVal, this.supplier);
+        console.log(data);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: "供应商联系人信息"
+        });
+      });
+      this.downloadLoading = false;
+    },
+    formatJson1(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    },
     selsChange(sels) {
       this.sels = sels;
     },
     checkInfo(index, row) {
-      // this.ind = index;
-      // this.msg = row;
+      this.ind = index;
+      this.msg = row;
       // this.form = {
       //   phone: this.msg.phone,
       //   name: this.msg.name,
@@ -280,6 +410,7 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
+      this.getTabledata();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -299,10 +430,11 @@ export default {
           this.supplier = res.data;
         });
     },
+    // 修改微信信息
     saveEdit() {
       // url:192.168.1.103:8201/shopPeople/updateContact
       axios
-        .get("http://192.168.1.103:8201/shopPeople/updateContact", {
+        .get("http://211.87.227.226:8201/shopPeople/updateContact", {
           params: {
             companyId: this.msg.FLOOR, //商场编号
             supplierId: this.msg.SUPID,
@@ -372,5 +504,35 @@ export default {
 }
 .clear {
   clear: both;
+}
+.left-cont {
+  width: 400px;
+  height: 150px;
+  margin: 20px 0 0 20px;
+}
+.left-cont li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  height: 30px;
+  width: 100%;
+  line-height: 30px;
+  /* float: left; */
+  margin-bottom: 10px;
+}
+.box-title {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background: #afcff0;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+.shop-info-text {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 5px;
 }
 </style>
