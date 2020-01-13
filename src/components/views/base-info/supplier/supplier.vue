@@ -13,13 +13,13 @@
     <div class="handle-box top-select-box clear">
       <div class="top">
         <span>查询条件:</span>
-        <el-input class="searchText" v-model="keyWord" placeholder="请输入供应商姓名"></el-input>
+        <el-input class="searchText" v-model="keyWord" placeholder="请输入供应商编号或名称"></el-input>
         <el-button
           size="mini"
           class="topBtn"
           type="primary"
           icon="el-icon-search"
-          @click="searchKey"
+          @click="getTabledata"
         >
           <span style="font-size: 12px">查询</span>
         </el-button>
@@ -286,18 +286,18 @@ export default {
     },
     //查询，根据姓名进行模糊查询
     searchKey() {
-      //注意，方法中的方法名不能喝data中的属性重名
-      let _key = this.supplier.name.toLowerCase();
-      // console.log(_key)
-      let newList = []; //声明一个新的数组，用于存放查询出来的数据，进行页面展示
-      if (_key) {
-        this.supplier.filter(item => {
-          if (item.name.toLowerCase().indexOf(_key) !== -1) {
-            newList.push(item);
-          }
-        });
-      }
-      this.supplier = newList;
+      // //注意，方法中的方法名不能喝data中的属性重名
+      // let _key = this.supplier.name.toLowerCase();
+      // // console.log(_key)
+      // let newList = []; //声明一个新的数组，用于存放查询出来的数据，进行页面展示
+      // if (_key) {
+      //   this.supplier.filter(item => {
+      //     if (item.name.toLowerCase().indexOf(_key) !== -1) {
+      //       newList.push(item);
+      //     }
+      //   });
+      // }
+      // this.supplier = newList;
     },
     handleAdd() {
       this.form = {
@@ -481,7 +481,7 @@ export default {
   margin-bottom: 10px;
 }
 .searchText {
-  width: 180px;
+  width: 200px;
   height: 30px;
 }
 .top {
