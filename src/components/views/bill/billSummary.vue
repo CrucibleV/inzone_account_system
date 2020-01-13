@@ -154,24 +154,7 @@
                 ind: 1,
                 msg: '',
                 search:'', 
-                form: {
-                    lc:'',
-                    gysbm:'',
-                    gysmc:'',
-                    pp:'',
-                    bzsr:'',
-                    zfsxf:'',
-                    lpftze: '',
-                    yhqftze:'',
-                    lcye:'',
-                    hdgdfy:'',
-                    kggf:'',
-                    kzj:'',
-                    qtkk:'',
-                    kksm:'',
-                    sjfk:'',
-                    status:''
-                }
+                form: {}
             }
         },
         mounted(){
