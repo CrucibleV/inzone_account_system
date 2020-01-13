@@ -241,7 +241,7 @@ export default {
     //获取供应商联系方式
     getContactdata() {
       axios({
-        url: "http://192.168.1.103:8201/wechat/getAllUserByTagID",
+        url: "http://211.87.227.226:8201/wechat/getAllUserByTagID",
         method: "get",
         params: {},
         headers: {
