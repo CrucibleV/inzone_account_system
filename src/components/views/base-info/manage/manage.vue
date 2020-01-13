@@ -6,7 +6,7 @@
     </div>
     <div class="top-tool-wrap">
       <div class="right-handle-box">
-        <el-input class="searchText"  v-model="search"  placeholder="输入供应商编码、名称或商位编码"></el-input>
+        <el-input class="searchText"  v-model="search"  placeholder="输入供应商编码、名称或商位编码" clearable></el-input>
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
@@ -15,25 +15,19 @@
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column type="selection" width="55px"></el-table-column>
-        <el-table-column prop="shop" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="lonDong" label="所在楼栋"  align="center"></el-table-column>
-        <el-table-column prop="floor" label="所在楼层"  align="center"></el-table-column>
-        <el-table-column prop="brand" label="品牌"  align="center"></el-table-column>
-        <el-table-column prop="quoCodeName" label="供应商编码名称" align="center"></el-table-column>
-        <el-table-column prop="quoCode" label="商位编码" align="center"></el-table-column>
-        <el-table-column prop="goodLocation" label="货区编码" align="center"></el-table-column>
-        <el-table-column prop="lastMod" label="最后修改时间" align="center"></el-table-column>
-        <el-table-column label="操作"  align="center" width="200px" >
-          <template slot-scope="scope" >
-            <!--              type="text"代表文字按钮-->
-            <el-button size="mini" type="success" plain @click="checkInfo(scope.$index, scope.row)">查看</el-button>
-          </template>
-        </el-table-column>
+        <el-table-column prop="MUCNAME" label="门店" align="center" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="LD" label="所在楼栋"  align="center"></el-table-column>
+        <el-table-column prop="LC" label="所在楼层"  align="center"></el-table-column>
+        <el-table-column prop="CBCNAME" label="品牌"  align="center"></el-table-column>
+        <el-table-column prop="SBID" label="供应商编码" align="center"></el-table-column>
+        <el-table-column prop="SBCNAME" label="供应商名称" align="center"></el-table-column>
+        <el-table-column prop="ID" label="商位编码" align="center"></el-table-column>
+        <el-table-column prop="SPNAME" label="货区编码" align="center"></el-table-column>
       </el-table>
 
       <div class="pagination">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+        <el-pagination @size-change="handleSizeChange"                 @current-change="handleCurrentChange"
+                       :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
   </div>
@@ -49,114 +43,12 @@
                 pagesize:10,
                 value:'',
                 list:[],
-                addVisible:false,
-                editVisible:false,
-                deleteVisible:false,
                 index:0,
+                totalCount: 0,
                 msg:'',
                 search:'',
                 sels:'',
-                tableData:[
-                    {
-                        index1:1,
-                        shop:'法莱文商铺',
-                        lonDong:'独栋',
-                        floor:'2F',
-                        brand:'法莱文',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'091-2-B1-047',
-                        lastMod:'2020-01-07',
-                    },
-                    {
-                        index1:2,
-                        shop:'大成商铺',
-                        lonDong:'独栋',
-                        floor:'3F',
-                        brand:'大成',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'041-2-B1-047',
-                        lastMod:'2020-01-07',
-                    },
-                    {
-                        index1:3,
-                        shop:'泰尔玛商铺',
-                        lonDong:'独栋',
-                        floor:'1F',
-                        brand:'泰尔玛',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'111',
-                        lastMod:'2020-01-07',
-                    },
-                    {
-                        index1:4,
-                        shop:'忆家商铺',
-                        lonDong:'独栋',
-                        floor:'5F',
-                        brand:'忆家',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'222',
-                        lastMod:'2020-01-07',
-                    },
-                    {
-                        index1:5,
-                        shop:'赛罗克商铺',
-                        lonDong:'独栋',
-                        floor:'1F',
-                        brand:'赛罗克',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'333',
-                        lastMod:'2020-01-07',
-                    },
-                    {
-                        index1:6,
-                        shop:'华宝利商铺',
-                        lonDong:'独栋',
-                        floor:'3F',
-                        brand:'华宝利',
-                        quoCodeName:'',
-                        quoCode:'000501010001',
-                        goodLocation:'444',
-                        lastMod:'2020-01-07'
-                    }
-                ],
-                fromName:{
-                    shop:'',
-                    lonDong:'',
-                    floor:'',
-                    brand:'',
-                    quoCodeName:'',
-                    quoCode:'',
-                    goodlocation:'',
-                    lastMod:'',
-                },
-                rules2:{
-                    shop:[
-                        {required:true,message:'门店名称不能为空',trigger:'blur'}
-                    ],
-                    lonDong:[
-                        {required:true,message:'楼栋不能为空',trigger:'blur'}
-                    ],
-                    floor:[
-                        {required:true,message:'楼层不能为空',trigger:'blur'}
-                    ],
-                    quoCodeName:[
-                        {required:true,message:'供应商编码名称不能为空',trigger:'blur'}
-                    ],
-                    quoCode:[
-                        {required:true,message:'商位编码不能为空',trigger:'blur'}
-                    ],
-                    goodLocation:[
-                        {required:true,message:'货区编码不能为空',trigger:'blur'}
-                    ],
-                    lastMod:[
-                        {required:true,message:'修改时间不能为空',trigger:'blur'}
-                    ]
-                }
+                tableData:[],
             }
         },
         computed:{
@@ -172,60 +64,46 @@
                 return this.tableData
             }
         },
+        watch:{
+            search(newState,oldState){
+                if(newState != oldState){
+                this.currentPage = 1;
+                }
+            }
+        },
         created(){
-
+            this.getData();
         },
         methods:{
             selsChange(sels) {
                 this.sels = sels
             },
-            handleAdd(){
-                this.fromName={
-                    shoplocation:'',
-                    shop:'',
-                    floorName:'',
-                    goodlocation:'',
-                    shoparea:'',
-                    metaial:'',
-                    style:'',
-                    brand:''
-                }
-              this.addVisible=true;
-            },
-            saveAdd(){
-              axios({
-                  url:"http://211.87.227.223:8082/group/addGroup",
-                  method:"post",
-                  params:{
-                      token: localStorage.getItem("Authorization"),//将token保存到本地
-                      shopLocation: this.fromName.shoplocation,
-                      shop: this.fromName.shop,
-                      floor: this.fromName.floorName,
-                      goodLocation:this.fromName.goodlocation,
-                      shopArea:this.fromName.shoparea,
-                      metaial:this.fromName.metaial,
-                      shopStyle:this.fromName.style,
-                      brand:this.fromName.brand,
-                  },
-                  headers:{
-                      'Content-type':'application/x-www-form-urlencoded'
-                  }
-              }).then(res=>{
-                  this.getData();
-                  this.$message.success('添加成功');
-              }).catch(error=>{
-                  console.log(error)
-                  this.$message.success('添加失败');
-              });
-                this.addVisible = false;
+            getData(){
+                axios({
+                url:"http://211.87.227.226:8201/shop/getShops",
+                method:"get",
+                params:{
+                    keyWord:this.search,
+                    pageIndex: this.currentPage,
+                    pageSize: this.pagesize,
+                },
+                headers:{
+                    'Content-type':'application/x-www-form-urlencoded'
+                },
+                data:[]
+                }).then(res=>{
+                //console.log(res.data);
+                this.tableData = res.data.data;
+                this.totalCount = res.data.respPage.totalCount;
+                });
             },
             searchKey(){
-              let _search=this.tableData.shopLocation.toLowerCase();//用于将字符串改为小写，让模糊查询更加详细
-              // console.log(_search);
+              let _search=this.tableData.ID.toLowerCase();//用于将字符串改为小写，让模糊查询更加详细
+              console.log(_search);
               let newListData=[];//用于存放搜索出来的数据
               if (_search){
                   this.tableData.filter(item=>{
-                      if (item.shopLocation.toLowerCase().indexOf(_search)!==-1){
+                      if (item.ID.toLowerCase().indexOf(_search)!==-1){
                           newListData.push(item)
                       }
                   })
@@ -241,12 +119,13 @@
                 })
             },
             handleSizeChange(val){
-                this.pagesize=val
+                this.pagesize=val;
+                this.getData();
             },
             handleCurrentChange(val){
                 this.currentPage=val;
+                this.getData();
             },
-
         }
     }
 </script>
@@ -284,7 +163,7 @@
     margin: 10px 0 0 20px;
   }
   .searchText {
-    width: 250px !important;
+    width: 260px !important;
     margin: 0 10px;
   }
   .searchBtn {

@@ -59,22 +59,23 @@
         },
         methods:{
             loginOut(){
+              //弹出一个框
                 var is_loginout = confirm("您确定要退出吗？")
                 if(is_loginout){
-                    this.$router.replace('/login');   // 跳转到指定的URL
                     axios({
-                        method: 'post',
+                        method: 'get',
                         url: this.$store.state.UrlIP + '/admin/logout',
                         params:{
                             token: localStorage.getItem("Authorization"),
                         },
                         headers:{
                             'Content-type':'application/x-www-form-urlencoded'
-                        }
+                        },
+                        data:[],                      
                     }).then(res => {
-                        localStorage.removeItem("Authorization");
-                        localStorage.removeItem('PermissionList');
-                        this.$router.replace('/login')
+                        localStorage.removeItem("Authorization");//退出成功之后，就从store中移除Authorization
+                        localStorage.removeItem('PermissionList');//退出成功之后，就从store中移除该角色所拥有的权限
+                        this.$router.replace('/login');//跳转到login页面
                     }).catch(error => {
                         console.log(error)
                     })

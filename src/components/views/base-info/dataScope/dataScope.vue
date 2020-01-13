@@ -49,6 +49,9 @@
       </el-pagination>
     </div>
 
+
+
+
     <!-- 查看弹框 -->
     <el-dialog title="数据信息详情" :visible.sync="selVisible" width="480px" >
       <el-form ref="form" :model="form" label-width="85px" >
@@ -74,6 +77,11 @@
     </el-dialog>
 
 
+
+
+
+
+
     <!--编辑框-->
     <el-dialog title="编辑数据信息" :visible.sync="editVisible" width="480px" >
       <el-form ref="form" :model="form" label-width="75px">
@@ -84,7 +92,6 @@
           <el-date-picker type="date" v-model="form.createTime" style="width: 300px;margin-left: 20px;" clearable></el-date-picker>
         </el-form-item>
         <el-form-item label="门店ID:" >
-       <!--为el-select添加filterable属性，可以实现启用搜索功能-->
           <el-select v-model="form.shopID" style="width: 300px;margin-left: 20px;" filterable  clearable>
             <el-option value="002"  ></el-option>
             <el-option value="003" ></el-option>
@@ -110,11 +117,58 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="selVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveUpdate">确 定</el-button>
       </span>
     </el-dialog>
 
+
+
+    <!--新增弹框-->
+
+    <el-dialog title="新增数据" :visible.sync="addVisible" width="480px" >
+      <el-form ref="form" :model="form" label-width="85px" >
+        <el-form-item label="数据名称：" >
+          <el-input v-model="form.dataName" style="width: 300px;margin-left: 20px;" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间：" >
+          <el-date-picker type="date" v-model="form.createTime" style="width: 300px;margin-left: 20px;" clearable></el-date-picker>
+        </el-form-item>
+        <el-form-item label="门店ID:" >
+          <!--为el-select添加filterable属性，可以实现启用搜索功能-->
+          <el-select v-model="form.shopID" style="width: 300px;margin-left: 20px;" filterable  clearable>
+            <el-option value="002"  ></el-option>
+            <el-option value="003" ></el-option>
+            <el-option value="004" ></el-option>
+            <el-option value="005" ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="楼层ID:">
+          <el-select v-model="form.floorID" style="width: 300px;margin-left: 20px;" filterable clearable>
+            <el-option value="1002" ></el-option>
+            <el-option value="1003" ></el-option>
+            <el-option value="1004" ></el-option>
+            <el-option value="1005" ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="商位ID:">
+          <el-select v-model="form.manageID" style="width: 300px;margin-left: 20px;" filterable clearable>
+            <el-option value="1002"></el-option>
+            <el-option value="1003" ></el-option>
+            <el-option value="1004" ></el-option>
+            <el-option value="1005" ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+           <el-button @click="addVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveAdd">确 定</el-button>
+        </span>
+    </el-dialog>
+
+
+
+   
 
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="deleteVisible" width="300px" center>
@@ -219,16 +273,17 @@
           },
 
           /**
-           * 初始化数据*/
+           * 查询数据*/
             getData() {
+              var _key=this.tableData.shopID;
                 axios({
                     url: this.$store.state.UrlIP + "",
                     method: "post",
                     params: {
-                        // token: localStorage.getItem("Authorization"),
+                        token: localStorage.getItem("Authorization"),
                         pageIndex: this.currentPage,
                         pageSize: this.pagesize,
-                        keyword: this.search
+                        keyword: _key
                     },
                     headers: {
                         'Content-type': 'application/x-www-form-urlencoded'
@@ -243,14 +298,45 @@
 
             handleAdd() {
                 this.form={
-                    id:'',
-                    name:'',
-                    ctime:'',
-                    uptime:'',
-                    status:''
+                  ROW_ID:"",
+                  dataName:"",
+                  createTime:"",
+                  shopID:"",
+                  floorID:"",
+                  manageID:""
                 }
                 this.addVisible=true;
             },
+
+          saveAdd(){
+            var dName=this.form.dataName;
+            var cTime=this.form.createTime;
+            var sID=this.form.shopID;
+            var fID=this.form.floorID;
+            var mID=this.form.manageID;
+            axios({
+              url:this.$store.state.UrlIP+"",
+              method:"post",
+              params:{
+                token:localStorage.getItem("Authorization"),//将token保存到本地
+                dataName:dName,
+                createTime:cTime,
+                shopID:sID,
+                floorID:fID,
+                manageID:mID
+              },
+              headers:{
+                "Content-type":"application/x-www-form-urlencoded"
+
+              },
+            }).then(res=>{
+              this.$message.success("添加成功");
+            }).catch(error=>{
+              console.log(error);
+            })
+          },
+
+
 
             /**
              * 查看详情
@@ -294,11 +380,11 @@
             var sID=this.form.shopID;
             var fID=this.form.floorID;
             var mID=this.form.manageID;
-            console.log(dName+cTime+sID+fID+mID);
             axios({
               url:this.$store.state.UrlIP+'',
               method:'post',
               params: {
+                token:localStorage.getItem("Authorization"),//将token保存到本地
                 dataName:dName,
                 createTime:cTime,
                 shopID:sID,
@@ -322,6 +408,23 @@
                 this.deleteVisible=true;
             },
             deleteRow() {
+                var deleteId=this.mes.ROW_ID;
+                console.log(deleteId);
+                axios({
+                  url:this.$store.state.UrlIP,
+                  method:"post",
+                  params:{
+                    token:localStorage.getItem("Authorization"),//将token保存到本地
+                    deleteId:deleteId
+                  },
+                  headers:{
+                    "Content-type":"application/x-www-form-urlencoded"
+                  }
+                }).then(res=>{
+                  this.$message.success("删除成功");
+                }).catch(error=>{
+                  console.log(error)
+                });
                 this.deleteVisible=false;
             },
 

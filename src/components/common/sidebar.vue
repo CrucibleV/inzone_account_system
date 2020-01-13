@@ -124,14 +124,17 @@
                                 title: '角色管理'
                             },{
                                 index: 'permission',
-                                title: '权限管理'
+                                title: '角色权限分配'
                             },{
                                 index: 'login-control',
-                                title: '登录日志'
+                                title: '登录历史'
                             },{
                                 index: 'admin-setting',
                                 title: '管理员设置'
-                             },
+                             },{
+                                index: 'ope-log',
+                                title: '操作日志'
+                             }
                         ]
                     }
                 ]
@@ -176,7 +179,5 @@
   .el-submenu__title i {
     color: white;
   }
-  .el-menu-item.is-active {
-    background: #1e3c65 !important;
-  }
+
 </style>

@@ -19,155 +19,184 @@ const router = new Router({
           path: 'home',
           component: resolve=>require(['../components/views/index/index.vue'],resolve),
           meta:{
+            menushow:true,//是否在导航栏中显示
             title: '首页',
-            //requiresAuth: true//这个路由引发的页面需要登录之后才可以进入,把权限设置在meta上，为了更方便的从router.beforeEch中进行权限判断
+            requiresAuth: true//这个路由引发的页面需要登录之后才可以进入,把权限设置在meta上，为了更方便的从router.beforeEch中进行权限判断
           },
         },
         {
           path:'shop',
           component: resolve=>require(['../components/views/base-info/shop/shop.vue'],resolve),
           meta:{
+            menushow:false,
             title: '门店管理',
-            // requiresAuth: true
+             requiresAuth: true
           },
         },
         {
           path:'supplier',
           component: resolve=>require(['../components/views/base-info/supplier/supplier.vue'],resolve),
           meta:{
+            menushow:false,
             title:'销售商管理',
-            // requiresAuth:true
+             requiresAuth:true
           }
         },
         {
           path:'manage',
           component: resolve=>require(['../components/views/base-info/manage/manage.vue'],resolve),
           meta:{
+            menushow:false,
             title:'商位管理',
-            // requiresAuth:true
+             requiresAuth:true
           }
         },
         {
           path:'dataScope',
           component: resolve=>require(['../components/views/base-info/dataScope/dataScope.vue'],resolve),
           meta:{
+            menushow:false,
             title:'数据范围',
-            // requiresAuth:true
+             requiresAuth:true
           }
         },
         {
           path:'shopInfo',
           component: resolve=>require(['../components/views/base-info/shop/shopInfo.vue'],resolve),
           meta:{
+            menushow:false,
             title: '店铺详细信息',
-            // requiresAuth: true
+             requiresAuth: true
           },
         },
         {
+
           path:'manageInfo',
           component: resolve=>require(['../components/views/base-info/manage/manageInfo.vue'],resolve),
           meta:{
+            menushow:false,
             title: '楼层货区详细信息',
-            // requiresAuth: true
+             requiresAuth: true
           },
         },
         {
           path: 'billSummary',
           component: resolve=>require(['../components/views/bill/billSummary.vue'], resolve),
           meta:{
+            menushow:false,
             title:'商位汇总',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
         {
           path: 'billSupplierSummary',
           component: resolve=>require(['../components/views/bill/billSupplierSummary.vue'], resolve),
           meta:{
+            menushow:false,
             title:'供应商汇总',
-            // requiresAuth: true
+            requiresAuth: true
           }
         },
         {
           path: 'billDetail',
           component: resolve=>require(['../components/views/bill/billDetail.vue'], resolve),
           meta:{
+            menushow:false,
             title:'扣款明细',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },{
           path: 'billSummaryExamine',
           component: resolve=>require(['../components/views/bill/billSummaryExamine.vue'], resolve),
           meta:{
+            menushow:false,
             title:'扣款审核',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },{
           path: 'examineHistory',
           component: resolve=>require(['../components/views/bill/examineHistory.vue'], resolve),
           meta:{
+            menushow:false,
             title:'审核历史',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },,{
           path: 'koudianSearch',
           component: resolve=>require(['../components/views/bill/koudianSearch.vue'], resolve),
           meta:{
+            menushow:false,
             title:'增品扣点',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
         {
           path: 'moneyJuan',
           component: resolve=>require(['../components/views/base-info/quankou/moneyJuan.vue'], resolve),
           meta:{
+            menushow:false,
             title:'劵扣管理',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
         {
           path: '/role',
           component: resolve=>require(['../components/views/system/role.vue'], resolve),
           meta:{
+            menushow:false,
             title:'角色管理',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },{
           path: '/permission',
           component: resolve=>require(['../components/views/system/permission.vue'], resolve),
           meta:{
+            menushow:false,
             title:'权限管理',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
         {
           path: '/login-control',
           component: resolve=>require(['../components/views/system/login-control.vue'], resolve),
           meta:{
+            menushow:false,
             title:'后台登录管理',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },{
           path: '/admin-setting',
           component: resolve=>require(['../components/views/system/admin-setting.vue'], resolve),
           meta:{
+            menushow:false,
             title:'管理员设置',
-            // requiresAuth: true
+             requiresAuth: true
+          }
+        },{
+          path: '/ope-log',
+          component: resolve=>require(['../components/views/system/ope-log.vue'], resolve),
+          meta:{
+            menushow:false,
+            title:'操作日志',
+             requiresAuth: true
           }
         },
         {
           path: '/wechat-manage',
           component: resolve=>require(['../components/views/wechat/wechat-manage.vue'], resolve),
           meta:{
+            menushow:false,
             title:'推送任务',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
         {
           path: '/wechat-history',
           component: resolve=>require(['../components/views/wechat/wechat-history.vue'], resolve),
           meta:{
+            menushow:false,
             title:'推送历史',
-            // requiresAuth: true
+             requiresAuth: true
           }
         },
       ]

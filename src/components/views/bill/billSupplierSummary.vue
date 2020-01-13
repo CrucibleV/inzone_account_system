@@ -17,7 +17,7 @@
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
-        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="getData">
+        <el-button class="searchBtn" size="medium" type="success" icon="el-icon-upload2" @click="exportDataToExcel">
           <span style="font-size: 12px">导出EXCEL</span>
         </el-button>
         <el-button class="searchBtn" size="medium" type="warning" icon="el-icon-upload2" @click="getData">
@@ -28,21 +28,28 @@
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="lc" label="楼层" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysbm" label="供应商编码" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="pp" label="品牌" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="bzsr" label="本周收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="zfsxf" label="支付手续费(元)" width="100px" align="center"></el-table-column>
-      <el-table-column prop="lpftze" label="礼品分摊总额(元)" width="110px" align="center"></el-table-column>
+      <el-table-column  label="商场" align="center" width="150" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+         [{{scope.row.MALLID}}]{{scope.row.MFCNAME}}
+        </template>
+      </el-table-column>
+      <el-table-column label="供应商" width="210px"  align="center"  :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+         [{{scope.row.SUPID}}]{{scope.row.SBCNAME}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="MINSUM" label="销售收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SXFHJ" label="支付手续费(元)" width="100px" align="center"></el-table-column>
+      <el-table-column prop="lpftze" label="赠品分摊总额(元)" width="110px" align="center"></el-table-column>
       <el-table-column prop="yhqftze" label="优惠券分摊总额(元)" width="120px" align="center"></el-table-column>
       <el-table-column prop="lcye" label="浪潮余额(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="fxyj" label="风险押金(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="hdgdfy" label="活动固定费用(元)" width="120px" align="center"></el-table-column>
       <el-table-column prop="kggf" label="扣广告费(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="kzj" label="扣租金(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="qtkk" label="其他扣款(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="kksm" label="扣款说明" width="130px" align="center"></el-table-column>
-      <el-table-column prop="sjfk" label="实际返款(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="HJ" label="实际返款(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
       <el-table-column label="操作" width="180px" fixed="right" align="center">
         <template slot-scope="scope">
@@ -56,6 +63,8 @@
                      :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
       </el-pagination>
     </div>
+
+
   </div>
 </template>
 
@@ -87,63 +96,8 @@
                 },
                 searchDateTime:'',//时间选择
                 tableData: [
-                  {
-                    index: 1,
-                    lc: '一层',
-                    gysbm: 'D12567',
-                    gysmc: '欧派橱柜',
-                    pp: '欧派',
-                    bzsr: '100万',
-                    zfsxf: '2000',
-                    lpftze: '10000',
-                    yhqftze: '10780',
-                    lcye: '',
-                    hdgdfy: '4000',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '商业汇演场地费',
-                    sjfk: '35468',
-                    status: '未审核'
-                  },{
-                    index: 2,
-                    lc: '三层',
-                    gysbm: 'D12567',
-                    gysmc: '瓷砖',
-                    pp: '史丹利',
-                    bzsr: '96万',
-                    zfsxf: '2000',
-                    lpftze: '89000',
-                    yhqftze: '8780',
-                    lcye: '',
-                    hdgdfy: '8900',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '',
-                    sjfk: '35468',
-                    status: '审核通过'
-                  },{
-                    index: 3,
-                    lc: '三层',
-                    gysbm: 'D12567',
-                    gysmc: '瓷砖',
-                    pp: '史丹利',
-                    bzsr: '96万',
-                    zfsxf: '2000',
-                    lpftze: '89000',
-                    yhqftze: '8780',
-                    lcye: '',
-                    hdgdfy: '8900',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '',
-                    sjfk: '35468',
-                    status: '审核未通过'
-                  },
                 ],
-                totalCount: 3,
+                totalCount: 0,
                 sels:'',
                 currentPage: 1,
                 pagesize: 10,
@@ -171,24 +125,42 @@
                 }
             }
         },
-
-        created() {
-          // this.getData();
+        mounted(){
+            let nowTime = new Date().getTime()//时间戳
+            let nowDay = new Date().getDay()//获取星期几（0、1、2、3、4、5、6）
+            let oneDayTime = 24*60*60*1000
+            let startT = null
+            let endT = null
+            if(nowDay>0){
+              startT = nowTime-oneDayTime*(nowDay+7-1-0)//上周周一
+              endT = nowTime-oneDayTime*(nowDay+7-1-6)//上周周日
+            }else{//如果是周日
+              startT = nowTime-oneDayTime*(nowDay+7+7-1-0)//上周周一
+              endT = nowTime-oneDayTime*(nowDay+7+7-1-6)//上周周日
+            }
+            this.searchDateTime = [startT,endT]
+            this.getData();
         },
-
+        created() {
+           
+        },
+        filters:{
+          filterTableData(value){
+            console.log(value.name)
+          }
+        },
         methods: {
             getData() {
                 axios({
-                    url: this.$store.state.UrlIP_ERP + "",
-                    method: "post",
+                    url: this.$store.state.UrlIP + "/refundMallSup/getRefunds",
+                    method: "get",
                     params: {
                         // token: localStorage.getItem("Authorization"),
                         pageIndex: this.currentPage,
                         pageSize: this.pagesize,
-                        keyword: this.search
-                    },
-                    headers: {
-                        'Content-type': 'application/x-www-form-urlencoded'
+                        keyword: this.search,
+                        startDate:'2019-12-09',//this.dateFilter(this.searchDateTime[0]),
+                        endDate:'2019-12-15'//this.dateFilter(this.searchDateTime[1])
                     }
                 }).then(res => {
                     this.tableData = res.data.data;
@@ -224,7 +196,10 @@
                 };
                 this.editVisible=true;
             },
-            
+            // 导出数据为excel
+            exportDataToExcel(){
+
+            },
             /**
              * 查看本周汇总的明细
             */
@@ -242,6 +217,14 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.getData();
+            },
+            //日期处理
+            dateFilter(input){
+                var d=new Date(input);
+                var year=d.getFullYear();
+                var month=d.getMonth()+1<10?'0'+(d.getMonth()+1):(d.getMonth()+1);
+                var day=d.getDate() <10 ? '0' + d.getDate() : '' + d.getDate();
+                return  year+ '-' + month + '-' + day;
             }
         }
     }
