@@ -229,7 +229,8 @@ export default {
         wechat2: ""
       },
       wechatoptions: [],
-      downloadLoading: false
+      downloadLoading: false,
+      exportSupplier: []
     };
   },
   mounted: function() {
@@ -259,7 +260,7 @@ export default {
     getTabledata() {
       axios({
         // 192.168.1.103:8201/shopPeople/getShopContact
-        url: "http://192.168.1.103:8201/shopPeople/getShopContact",
+        url: "http://211.87.227.226:8201/shopPeople/getShopContact",
         method: "get",
         params: {
           pageIndex: this.currentPage,
@@ -272,7 +273,7 @@ export default {
       })
         .then(res => {
           //   取数据
-          console.log(res.data);
+          // console.log(res.data);
           if (res.data.code == "0") {
             this.supplier = res.data.data;
             this.totalCount = res.data.respPage.totalCount;
@@ -312,7 +313,35 @@ export default {
     refresh() {
       this.getTabledata();
     },
+    // getExportdata() {
+    //   axios({
+    //     // 192.168.1.103:8201/shopPeople/getShopContact
+    //     url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+    //     method: "get",
+    //     params: {
+    //       pageIndex: this.currentPage,
+    //       pageSize: 2000,
+    //       keyWord: this.keyWord
+    //     },
+    //     headers: {
+    //       "Content-type": "application/x-www-form-urlencoded"
+    //     }
+    //   })
+    //     .then(res => {
+    //       //   取数据
+    //       console.log(res.data);
+    //       if (res.data.code == "0") {
+    //         this.exportSupplier = res.data.data;
+    //         // this.totalCount = res.data.respPage.totalCount;
+    //       }
+    //       // console.log(this.supplier.length);
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
     getExcel() {
+      // this.getExportdata();
       this.downloadLoading = true;
       import("../../../../vendor/Export2Excel").then(excel => {
         const tHeader = [
@@ -381,6 +410,7 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
+      this.getTabledata();
     },
     handleCurrentChange(val) {
       this.currentPage = val;
@@ -404,7 +434,7 @@ export default {
     saveEdit() {
       // url:192.168.1.103:8201/shopPeople/updateContact
       axios
-        .get("http://192.168.1.103:8201/shopPeople/updateContact", {
+        .get("http://211.87.227.226:8201/shopPeople/updateContact", {
           params: {
             companyId: this.msg.FLOOR, //商场编号
             supplierId: this.msg.SUPID,
