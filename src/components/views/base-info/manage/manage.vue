@@ -80,7 +80,7 @@
             },
             getData(){
                 axios({
-                url:"http://192.168.1.103:8201/shop/getShops",
+                url:"http://211.87.227.226:8201/shop/getShops",
                 method:"get",
                 params:{
                     keyWord:this.search,

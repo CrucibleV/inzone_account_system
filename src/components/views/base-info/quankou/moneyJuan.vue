@@ -9,7 +9,7 @@
         <div class="handle-box-loc handle-date-select">
           <span>日期范围：</span>
           <el-date-picker v-model="startDate" type="daterange" align="right" unlink-panels range-separator="至"
-                      start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions">
+                      start-placeholder="开始日期" end-placeholder="结束日期">
           </el-date-picker>
         </div>
         <span class="select-label">查询条件:</span>
@@ -70,7 +70,7 @@
 
         <div class="pagination">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" 
-                        :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+                        :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
           </el-pagination>
         </div>
         <!-- 查看固定比例弹出框 -->
@@ -156,9 +156,9 @@
         </el-dialog>
 
         <el-dialog title="新增劵扣"  :visible.sync="addVisible" width="600px" center :before-close="handleClose">
-          <el-form ref="form" :model="form" label-width="27%" :rules="rules2" class="demo-ruleForm" center>
+          <el-form ref="form1" :model="form1" label-width="27%" :rules="rules2" class="demo-ruleForm" center>
             <el-form-item label="选择劵扣规则:" prop="manner" center>
-              <el-select v-model="form.manner" placeholder="请选择劵扣规则" style="width: 70%;margin-left: 2%" clearable center>
+              <el-select v-model="form1.manner" placeholder="请选择劵扣规则" style="width: 70%;margin-left: 2%" clearable center>
                 <el-option v-for="item in optionsfrequency" :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -173,18 +173,18 @@
       </el-dialog>
 
       <el-dialog title="固定比例"  :visible.sync="addFixedRatio" width="600px" center :before-close="handleClose">
-          <el-form ref="formFixedRatio" :model="formFixedRatio" label-width="27%" :rules="rulesFixedRatio" class="demo-ruleForm">
-            <el-form-item label="商铺ID:" prop="shopId" >
-              <el-input v-model="formFixedRatio.shopId" placeholder="请输入商铺编码" style="width: 70%;margin-left: 2%" clearable></el-input>
+          <el-form ref="form1" :model="form1" label-width="27%" :rules="rulesFixedRatio" class="demo-ruleForm">
+            <el-form-item label="商铺ID:" prop="shopID" >
+              <el-input v-model="form1.shopID" placeholder="请输入商铺编码" style="width: 70%;margin-left: 2%" clearable></el-input>
             </el-form-item>
-            <el-form-item label="商铺承担比例:" prop="proportion" >
-              <el-input v-model="formFixedRatio.proportion" placeholder="请输入商铺承担比例" style="width: 70%;margin-left: 2%" clearable></el-input>
+            <el-form-item label="商铺承担比例:" prop="type1ShopRatio" >
+              <el-input v-model="form1.type1ShopRatio" placeholder="请输入商铺承担比例" style="width: 70%;margin-left: 2%" clearable></el-input>
             </el-form-item>
             <el-form-item label="开始日期:" prop="startTime">
-              <el-date-picker v-model="formFixedRatio.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="form1.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
             <el-form-item label="结束日期:" prop="endTime">
-              <el-date-picker v-model="formFixedRatio.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="form1.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -214,10 +214,10 @@
               <el-input v-model="formAmount.outRatio" placeholder="请输入阈值外比例" style="width: 70%;margin-left: 2%" clearable></el-input>
             </el-form-item>
             <el-form-item label="开始日期:" prop="startTime">
-              <el-date-picker v-model="formAmount.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="formAmount.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
             <el-form-item label="结束日期:" prop="endTime">
-              <el-date-picker v-model="formAmount.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="formAmount.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -244,10 +244,10 @@
               <el-input v-model="formContract.outRatio" placeholder="请输入阈值外比例" style="width: 70%;margin-left: 2%" clearable></el-input>
             </el-form-item>
             <el-form-item label="开始日期:" prop="startTime">
-              <el-date-picker v-model="formContract.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="formContract.startTime" placeholder="请选择开始日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
             <el-form-item label="结束日期:" prop="endTime">
-              <el-date-picker v-model="formContract.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable :picker-options="pickerOptions"></el-date-picker>
+              <el-date-picker v-model="formContract.endTime" placeholder="请选择结束日期" style="width: 70%;margin-left: 2%" type="date" clearable ></el-date-picker>
             </el-form-item>
           </el-form>
           <span slot="footer" class="dialog-footer">
@@ -273,6 +273,8 @@
                 startDate:'',
                 endDate:'',
                 search:'',
+
+                totalCount: 0,
                 checkVisible1:false,
                 checkVisible2:false,
                 checkVisible3:false,
@@ -297,7 +299,10 @@
                   State:'',
                   Type1ShopRatio:'',
                   RuleName:'',
-                  ShopID:''
+                  ShopID:'',
+                  isIdentify:'',
+                  manner:'',
+                  state:'',
                 },
                 form:{
                   manner:'',
@@ -413,40 +418,15 @@
                     ]
                 },
               optionsfrequency: [{
-                    value: '选项1',
+                    value: '1',
                     label: '固定比例'
                     }, {
-                    value: '选项2',
+                    value: '2',
                     label: '用卷数量和金额'
                     }, {
-                    value: '选项3',
+                    value: '3',
                     label: '销售合同数量'
                     }],
-              pickerOptions: {
-                  disabledDate(time) {
-                    return time.getTime() > Date.now();
-                  },
-                  shortcuts: [{
-                    text: '今天',
-                    onClick(picker) {
-                      picker.$emit('pick', new Date());
-                    }
-                  }, {
-                    text: '昨天',
-                    onClick(picker) {
-                      const date = new Date();
-                      date.setTime(date.getTime() - 3600 * 1000 * 24);
-                      picker.$emit('pick', date);
-                    }
-                  }, {
-                    text: '一周前',
-                    onClick(picker) {
-                      const date = new Date();
-                      date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                      picker.$emit('pick', date);
-                    }
-                  }]
-              }
             }
         },
         computed:{
@@ -489,7 +469,7 @@
             },
             getData(){
               axios({
-                url:"http://192.168.1.103:8201/couponRule/getRules",
+                url:"http://211.87.227.226:8201/couponRule/getRules",
                 method:"get",
                 params:{
                     //keyWord:this.search,
@@ -504,8 +484,8 @@
                 },
                 data:[]
               }).then(res=>{
-                //console.log(res.data);
                 this.tableData = res.data.data;
+                this.totalCount = res.data.respPage.totalCount;
               });
             },
           handleAdd(){
@@ -517,7 +497,7 @@
                   this.addVisible = true;
           },
           handleManner () {
-              if(this.form.manner=='选项1'){
+              if(this.form1.manner=='1'){
                   this.form={
                     manner:'',
                     state:'',
@@ -525,7 +505,7 @@
                   }
                   this.addVisible = false;
                   this.addFixedRatio=true;
-              }else if(this.form.manner=='选项2'){
+              }else if(this.form1.manner=='2'){
                   this.form={
                       manner:'',
                       state:'',
@@ -533,7 +513,7 @@
                   }
                   this.addVisible = false;
                   this.addAmount=true;
-              }else if(this.form.manner=='选项3'){
+              }else if(this.form1.manner=='3'){
                   this.form={
                       manner:'',
                       state:'',
@@ -609,22 +589,28 @@
             handleEdit(){},
             handleDelete(){},
             handleSizeChange(val){
-                this.pagesize=val
+                this.pagesize=val;
+                this.getData();
             },
             handleCurrentChange(){
                 this.currentPage=val;
+                this.getData();
             },
             saveAdd(){//通过ajax的方式提交到后台
                 axios({
-                  url:"",
+                  url:"http://211.87.227.226:8201/couponRule/addRule",
                   method:"post",
                   params:{
-                      // token: localStorage.getItem("Authorization"),//将token保存到本地
-                      // shopName: this.form.shopName,
-                      // address: this.form.address,
-                      // lnglat: this.form.lnglat,
-                      // phone:this.form.lnglat,
-                      // state:this.form.state
+                       ruleTyple:this.form1.ruleTyple,
+                       shopID:this.form1.shopID,
+                       startTime:this.form1.startTime,
+                       endTime:this.form1.endTime,
+                       type1ShopRatio:this.form1.type1ShopRatio,
+                       couponName:this.form1.couponName,
+                       thresholdN:this.form1.thresholdN,
+                       thresholdSum:this.form1.thresholdSum,
+                       ratioInThreshold:this.form1.ratioInThreshold,
+                       ratioOutThreshold:this.form1.ratioOutThreshold,
                   },
                   headers:{
                     'Content-type':'application/x-www-form-urlencoded'
