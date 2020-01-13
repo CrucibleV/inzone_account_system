@@ -6,7 +6,7 @@
     </div>
     <div class="top-tool-wrap">
       <div class="right-handle-box">
-        <el-input class="searchText"  v-model="search"  placeholder="请输入门店编号"></el-input>
+        <el-input class="searchText"  v-model="search"  placeholder="请输入查询条件" clearable></el-input>
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
@@ -30,7 +30,7 @@
 
     <div class="pagination">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="tableData.length">
+                       :current-page="currentPage" :page-sizes="[10,20]" :page-size="pagesize" layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
         </el-pagination>
       </div>
     <!-- 查看弹出框 -->
@@ -94,6 +94,7 @@
           sels:[],//选中的值显示
           currentPage:1,
           pagesize:10,
+          totalCount: 0,
           idx:0,
           msg:'',
           search: '',
@@ -210,10 +211,10 @@
         },
       getData(){
         axios({
-          url:"http://192.168.1.106:8201/company/getCompanys",
+          url:"http://211.87.227.226:8201/company/getCompanys",
           method:"get",
           params:{
-              keyWord:"",
+              keyWord:this.search,
               pageIndex: this.currentPage,
               pageSize: this.pagesize,
           },
@@ -224,6 +225,7 @@
         }).then(res=>{
           //console.log(res.data);
           this.tableData = res.data.data;
+          this.totalCount = res.data.respPage.totalCount;
         });
       },
       searchKey(){
@@ -249,9 +251,11 @@
       handleSizeChange(val) {
         this.pagesize = val;
         console.log(`每页 ${val} 条`);
+        this.getData();
       },
       handleCurrentChange(val) {
         this.currentPage = val;
+        this.getData();
       },
       // 查看按钮，其中index是索引，row是第几列
       checkInfo(index, row) {
@@ -293,7 +297,7 @@
       },
       saveEdit() {
         axios({
-          url:"http://192.168.1.106:8201/company/reviseShortName",//以ajax的方法传递给后端
+          url:"http://211.87.227.226:8201/company/reviseShortName",//以ajax的方法传递给后端
           method:"get",
           params:{
               erpMuCode:this.form.MUCODE,
@@ -325,7 +329,7 @@
       },
       saveAdd(){//通过ajax的方式提交到后台
         axios({
-          url:"http://211.87.227.223:8082/group/addGroup",
+          url:"http://211.87.227.226:8201/group/addGroup",
           method:"post",
           params:{
             token: localStorage.getItem("Authorization"),//将token保存到本地
