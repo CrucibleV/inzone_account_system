@@ -17,6 +17,7 @@
 
 
     <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%"  @selection-change="selsChange" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
+      <!-- <el-table-column type="expand"></el-table-column> -->
       <el-table-column prop="RoleID" label="ID" width="70px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="RoleName" label="角色名称" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="RoleDescription" label="角色描述" align="center" :show-overflow-tooltip="true">
@@ -54,22 +55,22 @@
 
 <!--角色的添加-->
     <el-dialog v-el-drag-dialog  title="添加角色" :visible.sync="addVisible" width="25%">
-      <el-form ref="form" :model="form" label-width="115px" :rules="rules2" class="demo-ruleForm">
-        <el-form-item label="角色名称：" prop="name">
+      <el-form ref="form" :model="form" label-width="115px" >
+        <el-form-item label="角色名称：">
           <el-input v-model="form.name" placeholder="请输入角色名称" style="width: 300px;margin-left: 20px;height: 55px;" clearable ></el-input>
         </el-form-item>
 
-        <el-form-item label="角色描述：" prop="description">
-          <textarea cols="10" rows="5" v-model="form.description"  style="width: 300px;margin-left: 20px" clearable></textarea>
+        <el-form-item label="角色描述：">
+          <textarea cols="10" rows="5" placeholder="请输入角色描述" v-model="form.description"  style="width: 300px;margin-left: 20px;" clearable></textarea>
         </el-form-item>
 
-        <el-form-item label="创建时间:" prop="ctime">
-          <el-date-picker v-model="form.ctime" type="datetime" style="width: 300px;margin-left: 20px" clearable></el-date-picker>
+        <el-form-item label="创建时间:">
+          <el-date-picker v-model="form.ctime" placeholder="请输入创建时间" type="datetime" style="width: 300px;margin-left: 20px" clearable></el-date-picker>
         </el-form-item>
-        <el-form-item label="更新时间:" prop="uptime">
-          <el-date-picker v-model="form.uptima" type="datetime" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
+        <el-form-item label="更新时间:">
+          <el-date-picker v-model="form.uptime" placeholder="请输入更新时间" type="datetime" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
         </el-form-item>
-        <el-form-item label="状态：" prop="status">
+        <el-form-item label="状态：">
           <el-select v-model="form.status" placeholder="请选择" style="margin-left: 20px;width: 300px" clearable>
             <el-option label="正常" value="ok"></el-option>
             <el-option label="停用" value="no"></el-option>
@@ -88,21 +89,21 @@
 
 <!--角色的修改-->
     <el-dialog v-el-drag-dialog  title="编辑角色信息" :visible.sync="updateVisible" width="25%">
-      <el-form ref="form" :model="form" label-width="115px" :rules="rules2" class="demo-ruleForm">
-        <el-form-item label="角色名称：" prop="name">
+      <el-form ref="form" :model="form" label-width="115px" >
+        <el-form-item label="角色名称：">
           <el-input v-model="form.name" placeholder="请输入角色名称" style="width: 300px;margin-left: 20px" clearable ></el-input>
         </el-form-item>
-        <el-form-item label="创建时间:" prop="ctime">
+        <el-form-item label="创建时间:">
           <el-date-picker v-model="form.ctime" type="datetime" placeholder="请输入创建时间" style="width: 300px;margin-left: 20px" clearable></el-date-picker>
         </el-form-item>
-        <el-form-item label="更新时间:" prop="uptime">
-          <el-date-picker v-model="form.uptima" type="datetime" placeholder="请输入更新时间" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
+        <el-form-item label="更新时间:">
+          <el-date-picker v-model="form.uptime" type="datetime" placeholder="请输入更新时间" style="width:300px;margin-left:20px" clearable=""></el-date-picker>
         </el-form-item>
-        <el-form-item label="角色描述：" prop="description">
+        <el-form-item label="角色描述：">
           <textarea cols="10" rows="5" v-model="form.description" placeholder="请输入角色描述" style="width: 300px;margin-left: 20px" clearable></textarea>
         </el-form-item>
 
-        <el-form-item label="状态：" prop="status">
+        <el-form-item label="状态：">
           <el-select v-model="form.status" placeholder="请选择" style="margin-left: 20px;width: 300px" clearable>
             <el-option label="正常" value="ok"></el-option>
             <el-option label="停用" value="no"></el-option>
@@ -187,7 +188,6 @@
               },
               data:[]
             }).then(res=>{
-              console.log(11111111);
               this.tableData=res.data.data;
             }).catch(error=>{
               console.log(error);

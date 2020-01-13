@@ -220,7 +220,7 @@
        */
       getPermissionList() {
         axios({
-          url: 'http://localhost:8201/authority/getRoleAuthority',
+          url: this.$store.state.urlIPs+'/getRoleAuthority',
           method: "get",
           params: {
             roleID: this.roleValue || 1,//向后台传递角色值，就是这个角色所拥有的权限
@@ -234,8 +234,8 @@
             let authority = res.data.data;  //将该角色所拥有的权限列表赋予给变量authority
             console.log(authority);
             let tmpArr = [];
-            for(let key in authority) {
-              for(let i = 0; i<authority[key].length; i++) {
+            for(let key in authority) {//在后台管理中，这是一级权限
+              for(let i = 0; i<authority[key].length; i++) {//在后台数据中，这是二级权限
                 tmpArr.push(authority[key][i].AuthorName);
               }
             }

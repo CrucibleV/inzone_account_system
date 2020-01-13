@@ -8,9 +8,9 @@ const store = new Vuex.Store({
   state: {
     Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
     UserName: 'admin',
-    PermissionList: ['添加'],                // 具有的权限列表
-    UrlIP: 'http://192.168.1.103:8201/admin',     // 登录地址前缀
-    urlIPs:'http://192.168.1.103:8201/authority',   //权限地址前缀
+    PermissionList: ['添加'],                // 角色具有的权限列表
+    UrlIP: 'http://211.87.227.226:8201/admin',     // 登录地址前缀
+    urlIPs:'http://211.87.227.226:8201/authority',   //权限地址前缀
     isShowShopAdd: true,
   },
 
