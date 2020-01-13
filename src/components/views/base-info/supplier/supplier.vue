@@ -23,7 +23,13 @@
         >
           <span style="font-size: 12px">查询</span>
         </el-button>
-        <el-button size="mini" type="success" class="topBtn" @click="getExcel">
+        <el-button
+          size="mini"
+          type="success"
+          class="topBtn"
+          :loading="downloadLoading"
+          @click="getExcel"
+        >
           <i class="el-icon-upload2"></i>导出
         </el-button>
         <el-button size="mini" type="warning" icon="el-icon-refresh" class="topBtn">
@@ -222,7 +228,8 @@ export default {
         wechat1: "",
         wechat2: ""
       },
-      wechatoptions: []
+      wechatoptions: [],
+      downloadLoading: false
     };
   },
   mounted: function() {
@@ -305,7 +312,48 @@ export default {
     refresh() {
       this.getTabledata();
     },
-    getExcel() {},
+    getExcel() {
+      this.downloadLoading = true;
+      import("../../../../vendor/Export2Excel").then(excel => {
+        const tHeader = [
+          "行编号",
+          "供应商编号",
+          "供应商名称",
+          "门店编号",
+          "门店名称",
+          "商场编号",
+          "商场名称",
+          "供应商类型编码",
+          "微信联系人1",
+          "微信联系人2",
+          "录入日期"
+        ]; //头
+        const filterVal = [
+          "ROW_ID",
+          "SUPID",
+          "SBCNAME",
+          "MFPCODE",
+          "MUCNAME",
+          "FLOOR",
+          "MFCNAME",
+          "SBCATCODE",
+          "WxUserID1",
+          "WxUserID2",
+          "UpdateTime"
+        ]; //值
+        const data = this.formatJson1(filterVal, this.supplier);
+        console.log(data);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: "供应商联系人信息"
+        });
+      });
+      this.downloadLoading = false;
+    },
+    formatJson1(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    },
     selsChange(sels) {
       this.sels = sels;
     },
@@ -352,6 +400,7 @@ export default {
           this.supplier = res.data;
         });
     },
+    // 修改微信信息
     saveEdit() {
       // url:192.168.1.103:8201/shopPeople/updateContact
       axios
