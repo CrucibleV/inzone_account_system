@@ -13,7 +13,7 @@
     <div class="handle-box top-select-box clear">
       <div class="top">
         <span>查询条件:</span>
-        <el-input class="searchText" v-model="keyWord" placeholder="请输入供应商编号或名称"></el-input>
+        <el-input class="searchText" v-model="keyWord" placeholder="请输入供应商姓名"></el-input>
         <el-button
           size="mini"
           class="topBtn"
@@ -30,7 +30,7 @@
           :loading="downloadLoading"
           @click="getExcel"
         >
-          <i class="el-icon-upload2"></i>导出
+          <i class="el-icon-upload2"></i>导出当前页
         </el-button>
         <el-button size="mini" type="warning" icon="el-icon-refresh" class="topBtn">
           <span style="font-size: 12px" @click="refresh">刷新</span>
@@ -87,15 +87,21 @@
           <font v-else>{{scope.row.WxUserID2}}</font>
         </template>
       </el-table-column>
-      <el-table-column prop="UpdateTime" label="录入日期" align="center">
+      <el-table-column
+        prop="UpdateTime"
+        label="录入日期"
+        align="center"
+        min-width="150px"
+        :show-overflow-tooltip="true"
+      >
         <template slot-scope="scope">
           <font v-if="scope.row.UpdateTime===null">无</font>
           <font v-else>{{scope.row.UpdateTime}}</font>
         </template>
       </el-table-column>
-      <el-table-column prop="SBCATCODE" label="供应商类型" align="center"></el-table-column>
+      <el-table-column prop="SBCATCODE" label="供应商类型" align="center" width="100px"></el-table-column>
       <!-- <el-table-column prop="status" label="状态" align="center"></el-table-column> -->
-      <el-table-column label="操作" align="center">
+      <el-table-column width="200px" label="操作" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="success" @click="checkInfo(scope.$index, scope.row)">查看</el-button>
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -117,29 +123,33 @@
     </div>
 
     <!-------------------------添加微信弹框---------------------------------------->
-    <el-dialog title="编辑微信" :visible.sync="editVisible" width="20%">
+    <el-dialog title="编辑微信" :visible.sync="editVisible" width="500px">
       <el-form ref="form" :model="form" label-width="95px" class="demo-ruleForm">
         <el-form-item label="企业联系人1">
-          <el-select v-model="form.wechat1" clearable placeholder="请选择">
-            <el-option
-              v-for="item in wechatoptions"
-              :key="item.userName"
-              :label="item.nickName"
-              :value="item.userName"
-            >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
-            <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
-          </el-select>
+          <div class="selectBox">
+            <el-select v-model="form.wechat1" clearable placeholder="请选择" style="float:left;">
+              <el-option
+                v-for="item in wechatoptions"
+                :key="item.userName"
+                :label="item.nickName"
+                :value="item.userName"
+              >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
+              <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
+            </el-select>
+          </div>
         </el-form-item>
         <el-form-item label="企业联系人2">
-          <el-select v-model="form.wechat2" clearable placeholder="请选择">
-            <el-option
-              v-for="item in wechatoptions"
-              :key="item.userName"
-              :label="item.nickName"
-              :value="item.userName"
-            >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
-            <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
-          </el-select>
+          <div class="selectBox">
+            <el-select v-model="form.wechat2" clearable placeholder="请选择" style="float:left;">
+              <el-option
+                v-for="item in wechatoptions"
+                :key="item.userName"
+                :label="item.nickName"
+                :value="item.userName"
+              >[{{item.tagName}}]{{item.nickName}}({{item.userName}})</el-option>
+              <!-- value表示选项值，label代表最终显示在下拉框里的字 -->
+            </el-select>
+          </div>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -241,7 +251,7 @@ export default {
     //获取供应商联系方式
     getContactdata() {
       axios({
-        url: "http://211.87.227.226:8201/wechat/getAllUserByTagID",
+        url: this.$store.state.UrlIP + "/wechat/getAllUserByTagID",
         method: "get",
         params: {},
         headers: {
@@ -260,7 +270,7 @@ export default {
     getTabledata() {
       axios({
         // 192.168.1.103:8201/shopPeople/getShopContact
-        url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+        url: this.$store.state.UrlIP + "/shopPeople/getShopContact",
         method: "get",
         params: {
           pageIndex: this.currentPage,
@@ -286,18 +296,18 @@ export default {
     },
     //查询，根据姓名进行模糊查询
     searchKey() {
-      // //注意，方法中的方法名不能喝data中的属性重名
-      // let _key = this.supplier.name.toLowerCase();
-      // // console.log(_key)
-      // let newList = []; //声明一个新的数组，用于存放查询出来的数据，进行页面展示
-      // if (_key) {
-      //   this.supplier.filter(item => {
-      //     if (item.name.toLowerCase().indexOf(_key) !== -1) {
-      //       newList.push(item);
-      //     }
-      //   });
-      // }
-      // this.supplier = newList;
+      //注意，方法中的方法名不能喝data中的属性重名
+      let _key = this.supplier.name.toLowerCase();
+      // console.log(_key)
+      let newList = []; //声明一个新的数组，用于存放查询出来的数据，进行页面展示
+      if (_key) {
+        this.supplier.filter(item => {
+          if (item.name.toLowerCase().indexOf(_key) !== -1) {
+            newList.push(item);
+          }
+        });
+      }
+      this.supplier = newList;
     },
     handleAdd() {
       this.form = {
@@ -311,12 +321,13 @@ export default {
     },
     deleteFileOrDirectory(val) {},
     refresh() {
+      this.keyWord = "";
       this.getTabledata();
     },
     // getExportdata() {
     //   axios({
     //     // 192.168.1.103:8201/shopPeople/getShopContact
-    //     url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+    //     url: this.$store.state.UrlIP+"/shopPeople/getShopContact",
     //     method: "get",
     //     params: {
     //       pageIndex: this.currentPage,
@@ -434,7 +445,7 @@ export default {
     saveEdit() {
       // url:192.168.1.103:8201/shopPeople/updateContact
       axios
-        .get("http://211.87.227.226:8201/shopPeople/updateContact", {
+        .get(this.$store.state.UrlIP + "/shopPeople/updateContact", {
           params: {
             companyId: this.msg.FLOOR, //商场编号
             supplierId: this.msg.SUPID,
@@ -481,7 +492,7 @@ export default {
   margin-bottom: 10px;
 }
 .searchText {
-  width: 200px;
+  width: 180px;
   height: 30px;
 }
 .top {
@@ -534,5 +545,8 @@ export default {
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 5px;
+}
+.selectBox {
+  margin-left: 7px;
 }
 </style>
