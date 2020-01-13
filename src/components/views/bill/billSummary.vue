@@ -35,15 +35,14 @@
       <el-table-column prop="MINSUM" label="销售收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="SXFHJ" label="支付手续费(元)" width="100px" align="center"></el-table-column>
       <el-table-column prop="HJ" label="实际返款(元)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="lpftze" label="礼品分摊总额(元)" width="110px" align="center"></el-table-column>
+      <el-table-column prop="lpftze" label="赠品分摊总额(元)" width="110px" align="center"></el-table-column>
       <el-table-column prop="yhqftze" label="优惠券分摊总额(元)" width="120px" align="center"></el-table-column>
-      <el-table-column prop="lcye" label="浪潮余额(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="hdgdfy" label="活动固定费用(元)" width="120px" align="center"></el-table-column>
-      <el-table-column prop="kggf" label="扣广告费(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="kggf" label="广告费(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="kzj" label="扣租金(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="kzj" label="暂停费(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="qtkk" label="其他扣款(元)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="kksm" label="扣款说明" width="130px" align="center"></el-table-column>
-     
+      <el-table-column prop="kksm" label="备注" width="130px" align="center"></el-table-column>
       <el-table-column prop="State" label="状态" width="100px" align="center"></el-table-column>
       <el-table-column label="操作" width="180px" fixed="right" align="center">
         <template slot-scope="scope">
