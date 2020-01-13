@@ -171,9 +171,9 @@
           </ul>
         </div>
         <!-- 交易合同明细 -->
-        <div class="shop-info-text">
+        <!-- 这一部分获取的数据是billDetail页面的参数,单独请求接口 -->
+        <!-- <div class="shop-info-text">
           <div class="box-title">交易合同明细</div>
-          <!-- 这一部分获取的数据是billDetail页面的参数,单独请求接口 -->
           <ul class="left-cont" :model="form">
             <li class="info-li">
               <span style="font-weight:700">销售日期：</span>
@@ -228,7 +228,7 @@
               {{form.sjfkje}}
             </li>
           </ul>
-        </div>
+        </div>-->
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleData" type="warning">审核</el-button>
