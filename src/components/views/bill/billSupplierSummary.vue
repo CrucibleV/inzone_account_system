@@ -28,12 +28,19 @@
 
     <el-table :data="tableData" border style="width: 100%;" stripe :row-style="{height:'45px'}" highlight-current-row  :cell-style="{padding:'0px'}" :header-cell-style="{background:'#d3e3f4',color:'#5881bb'}" >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="lc" label="楼层" align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysbm" label="供应商编码" width="100px"  align="center"  :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="gysmc" label="供应商名称" width="110px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="bzsr" label="本周收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="zfsxf" label="支付手续费(元)" width="100px" align="center"></el-table-column>
-      <el-table-column prop="lpftze" label="礼品分摊总额(元)" width="110px" align="center"></el-table-column>
+      <el-table-column  label="商场" align="center" width="150" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+         [{{scope.row.MALLID}}]{{scope.row.MFCNAME}}
+        </template>
+      </el-table-column>
+      <el-table-column label="供应商" width="210px"  align="center"  :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+         [{{scope.row.SUPID}}]{{scope.row.SBCNAME}}
+        </template>
+      </el-table-column>
+      <el-table-column prop="MINSUM" label="销售收入(元)" width="90px" align="center" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="SXFHJ" label="支付手续费(元)" width="100px" align="center"></el-table-column>
+      <el-table-column prop="lpftze" label="赠品分摊总额(元)" width="110px" align="center"></el-table-column>
       <el-table-column prop="yhqftze" label="优惠券分摊总额(元)" width="120px" align="center"></el-table-column>
       <el-table-column prop="lcye" label="浪潮余额(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="fxyj" label="风险押金(元)" width="90px" align="center"></el-table-column>
@@ -42,7 +49,7 @@
       <el-table-column prop="kzj" label="扣租金(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="qtkk" label="其他扣款(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="kksm" label="扣款说明" width="130px" align="center"></el-table-column>
-      <el-table-column prop="sjfk" label="实际返款(元)" width="90px" align="center"></el-table-column>
+      <el-table-column prop="HJ" label="实际返款(元)" width="90px" align="center"></el-table-column>
       <el-table-column prop="status" label="状态" width="100px" align="center"></el-table-column>
       <el-table-column label="操作" width="180px" fixed="right" align="center">
         <template slot-scope="scope">
@@ -89,64 +96,8 @@
                 },
                 searchDateTime:'',//时间选择
                 tableData: [
-                  {
-                    index: 1,
-                    lc: '一层',
-                    gysbm: 'D12567',
-                    gysmc: '欧派橱柜',
-                    pp: '欧派',
-                    bzsr: '100万',
-                    zfsxf: '2000',
-                    lpftze: '10000',
-                    yhqftze: '10780',
-                    lcye: 122222,
-                    fxyj:0,
-                    hdgdfy: '4000',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '商业汇演场地费',
-                    sjfk: '35468',
-                    status: '未审核'
-                  },{
-                    index: 2,
-                    lc: '三层',
-                    gysbm: 'D12567',
-                    gysmc: '瓷砖',
-                    pp: '史丹利',
-                    bzsr: '96万',
-                    zfsxf: '2000',
-                    lpftze: '89000',
-                    yhqftze: '8780',
-                    lcye: '',
-                    hdgdfy: '8900',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '',
-                    sjfk: '35468',
-                    status: '审核通过'
-                  },{
-                    index: 3,
-                    lc: '三层',
-                    gysbm: 'D12567',
-                    gysmc: '瓷砖',
-                    pp: '史丹利',
-                    bzsr: '96万',
-                    zfsxf: '2000',
-                    lpftze: '89000',
-                    yhqftze: '8780',
-                    lcye: '',
-                    hdgdfy: '8900',
-                    kggf: '5926',
-                    kzj: '8900',
-                    qtkk: '19293',
-                    kksm: '',
-                    sjfk: '35468',
-                    status: '审核未通过'
-                  },
                 ],
-                totalCount: 3,
+                totalCount: 0,
                 sels:'',
                 currentPage: 1,
                 pagesize: 10,
@@ -188,23 +139,28 @@
               endT = nowTime-oneDayTime*(nowDay+7+7-1-6)//上周周日
             }
             this.searchDateTime = [startT,endT]
+            this.getData();
         },
         created() {
-          // this.getData();
+           
+        },
+        filters:{
+          filterTableData(value){
+            console.log(value.name)
+          }
         },
         methods: {
             getData() {
                 axios({
-                    url: this.$store.state.UrlIP_ERP + "",
-                    method: "post",
+                    url: this.$store.state.TestIP + "/refundMallSup/getRefunds",
+                    method: "get",
                     params: {
                         // token: localStorage.getItem("Authorization"),
                         pageIndex: this.currentPage,
                         pageSize: this.pagesize,
-                        keyword: this.search
-                    },
-                    headers: {
-                        'Content-type': 'application/x-www-form-urlencoded'
+                        keyword: this.search,
+                        startDate:'2019-12-09',//this.dateFilter(this.searchDateTime[0]),
+                        endDate:'2019-12-15'//this.dateFilter(this.searchDateTime[1])
                     }
                 }).then(res => {
                     this.tableData = res.data.data;
@@ -261,6 +217,14 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.getData();
+            },
+            //日期处理
+            dateFilter(input){
+                var d=new Date(input);
+                var year=d.getFullYear();
+                var month=d.getMonth()+1<10?'0'+(d.getMonth()+1):(d.getMonth()+1);
+                var day=d.getDate() <10 ? '0' + d.getDate() : '' + d.getDate();
+                return  year+ '-' + month + '-' + day;
             }
         }
     }

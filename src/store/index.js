@@ -10,6 +10,7 @@ const store = new Vuex.Store({
     UserName: 'admin',
     PermissionList: ['添加'],                // 具有的权限列表
     UrlIP: 'http://211.87.227.226:8089',     // 接口地址前缀
+    TestIP:'HTTP://211.87.227.226:8201',
     isShowShopAdd: true,
   },
 

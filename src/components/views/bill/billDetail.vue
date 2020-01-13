@@ -291,19 +291,24 @@
         watch:{
         },
         mounted(){
-            let nowTime = new Date().getTime()//时间戳
-            let nowDay = new Date().getDay()//获取星期几（0、1、2、3、4、5、6）
-            let oneDayTime = 24*60*60*1000
-            let startT = null
-            let endT = null
-            if(nowDay>0){
-              startT = nowTime-oneDayTime*(nowDay+7-1-0)//上周周一
-              endT = nowTime-oneDayTime*(nowDay+7-1-6)//上周周日
-            }else{//如果是周日
-              startT = nowTime-oneDayTime*(nowDay+7+7-1-0)//上周周一
-              endT = nowTime-oneDayTime*(nowDay+7+7-1-6)//上周周日
+            if(this.$route.params.length>0){
+
+            }else{
+              console.log(this.$route.params)
+              let nowTime = new Date().getTime()//时间戳
+              let nowDay = new Date().getDay()//获取星期几（0、1、2、3、4、5、6）
+              let oneDayTime = 24*60*60*1000
+              let startT = null
+              let endT = null
+              if(nowDay>0){
+                startT = nowTime-oneDayTime*(nowDay+7-1-0)//上周周一
+                endT = nowTime-oneDayTime*(nowDay+7-1-6)//上周周日
+              }else{//如果是周日
+                startT = nowTime-oneDayTime*(nowDay+7+7-1-0)//上周周一
+                endT = nowTime-oneDayTime*(nowDay+7+7-1-6)//上周周日
+              }
+              this.searchDateTime = [startT,endT]
             }
-            this.searchDateTime = [startT,endT]
         },
         methods:{
             sxfCloneSpan({ row, column, rowIndex, columnIndex }){
