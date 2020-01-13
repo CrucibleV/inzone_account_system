@@ -241,7 +241,7 @@ export default {
     //获取供应商联系方式
     getContactdata() {
       axios({
-        url: "http://211.87.227.226:8201/wechat/getAllUserByTagID",
+        url: this.$store.state.UrlIP + "/wechat/getAllUserByTagID",
         method: "get",
         params: {},
         headers: {
@@ -260,7 +260,7 @@ export default {
     getTabledata() {
       axios({
         // 192.168.1.103:8201/shopPeople/getShopContact
-        url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+        url: this.$store.state.UrlIP + "/shopPeople/getShopContact",
         method: "get",
         params: {
           pageIndex: this.currentPage,
@@ -316,7 +316,7 @@ export default {
     // getExportdata() {
     //   axios({
     //     // 192.168.1.103:8201/shopPeople/getShopContact
-    //     url: "http://211.87.227.226:8201/shopPeople/getShopContact",
+    //     url: this.$store.state.UrlIP+"/shopPeople/getShopContact",
     //     method: "get",
     //     params: {
     //       pageIndex: this.currentPage,
@@ -434,7 +434,7 @@ export default {
     saveEdit() {
       // url:192.168.1.103:8201/shopPeople/updateContact
       axios
-        .get("http://211.87.227.226:8201/shopPeople/updateContact", {
+        .get(this.$store.state.UrlIP + "/shopPeople/updateContact", {
           params: {
             companyId: this.msg.FLOOR, //商场编号
             supplierId: this.msg.SUPID,
