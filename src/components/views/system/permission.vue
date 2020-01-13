@@ -211,7 +211,7 @@
       }
     },
     created() {
-      this.getPermissionList();
+      this.getPermissionList();//在声明周期开始的时候就执行这个操作，调用这个函数
       this.getRoleData();
     },
     methods: {
@@ -220,24 +220,29 @@
        */
       getPermissionList() {
         axios({
-          url: this.$store.state.UrlIP + '',
-          method: "post",
+          url: this.$store.state.urlIP+'/authority/getRoleAuthority',
+          method: "get",
           params: {
-            roleID: this.roleValue || 1,//向后台传递角色值
+            roleID: this.roleValue || 1,//向后台传递角色值，就是这个角色所拥有的权限
           },
           headers: {
             'Content-type': 'application/x-www-form-urlencoded'
           },
           data: []
-        }).then(res => {
-          let authority = res.data.data;
-          let tmpArr = [];
-          for(let key in authority) {
-            for(let i = 0; i<authority[key].length; i++) {
-              tmpArr.push(authority[key][i].AuthorName);
+        }).then(res => {  //成功之后所执行的函数
+          if(res.data.code===0){
+            let authority = res.data.data;  //将该角色所拥有的权限列表赋予给变量authority
+            console.log(authority);
+            let tmpArr = [];
+            for(let key in authority) {//在后台管理中，这是一级权限
+              for(let i = 0; i<authority[key].length; i++) {//在后台数据中，这是二级权限
+                tmpArr.push(authority[key][i].AuthorName);
+              }
             }
-          }
           this.checkList = tmpArr;
+
+          } 
+          
         }).catch(error => {
           console.log(error);
         });

@@ -49,6 +49,9 @@
       </el-pagination>
     </div>
 
+
+
+
     <!-- 查看弹框 -->
     <el-dialog title="数据信息详情" :visible.sync="selVisible" width="480px" >
       <el-form ref="form" :model="form" label-width="85px" >
@@ -74,6 +77,11 @@
     </el-dialog>
 
 
+
+
+
+
+
     <!--编辑框-->
     <el-dialog title="编辑数据信息" :visible.sync="editVisible" width="480px" >
       <el-form ref="form" :model="form" label-width="75px">
@@ -84,7 +92,6 @@
           <el-date-picker type="date" v-model="form.createTime" style="width: 300px;margin-left: 20px;" clearable></el-date-picker>
         </el-form-item>
         <el-form-item label="门店ID:" >
-       <!--为el-select添加filterable属性，可以实现启用搜索功能-->
           <el-select v-model="form.shopID" style="width: 300px;margin-left: 20px;" filterable  clearable>
             <el-option value="002"  ></el-option>
             <el-option value="003" ></el-option>
@@ -108,21 +115,9 @@
             <el-option value="1005" ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="创建时间：" >
-          <el-input v-model="form.createTime" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
-        </el-form-item>
-        <el-form-item label="门店ID：" >
-          <el-input v-model="form.shopID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
-        </el-form-item>
-        <el-form-item label="楼层ID：">
-          <el-input v-model="form.floorID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
-        </el-form-item>
-        <el-form-item label="商位ID：">
-          <el-input v-model="form.manageID" style="width: 300px;margin-left: 20px" disabled clearable></el-input>
-        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="selVisible = false">取 消</el-button>
+          <el-button @click="editVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveUpdate">确 定</el-button>
       </span>
     </el-dialog>
@@ -171,46 +166,9 @@
         </span>
     </el-dialog>
 
-    <!--编辑框-->
-    <el-dialog title="编辑数据信息" :visible.sync="editVisible" width="480px" >
-      <el-form ref="form" :model="form" label-width="75px">
-        <el-form-item label="数据名称:" >
-          <el-input v-model="form.dataName" style="width: 300px;margin-left: 20px;" clearable></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间:" >
-          <el-date-picker type="date" v-model="form.createTime" style="width: 300px;margin-left: 20px;" clearable></el-date-picker>
-        </el-form-item>
-        <el-form-item label="门店ID:" >
-       <!--为el-select添加filterable属性，可以实现启用搜索功能-->
-          <el-select v-model="form.shopID" style="width: 300px;margin-left: 20px;" filterable  clearable>
-            <el-option value="002"  ></el-option>
-            <el-option value="003" ></el-option>
-            <el-option value="004" ></el-option>
-            <el-option value="005" ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="楼层ID:">
-          <el-select v-model="form.floorID" style="width: 300px;margin-left: 20px;" filterable clearable>
-            <el-option value="1002" ></el-option>
-            <el-option value="1003" ></el-option>
-            <el-option value="1004" ></el-option>
-            <el-option value="1005" ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商位ID:">
-          <el-select v-model="form.manageID" style="width: 300px;margin-left: 20px;" filterable clearable>
-            <el-option value="1002"></el-option>
-            <el-option value="1003" ></el-option>
-            <el-option value="1004" ></el-option>
-            <el-option value="1005" ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-          <el-button @click="selVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveUpdate">确 定</el-button>
-      </span>
-    </el-dialog>
+
+
+   
 
     <!-- 删除提示框 -->
     <el-dialog title="提示" :visible.sync="deleteVisible" width="300px" center>
