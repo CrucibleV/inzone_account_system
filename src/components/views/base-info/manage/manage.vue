@@ -152,7 +152,7 @@
     background: #fafafa;
     text-align: left;
     display: flex;
-    padding: 10px 20px;
+    padding: 10px 0px;
     font-size: 14px;
   }
   .handle-content-select {

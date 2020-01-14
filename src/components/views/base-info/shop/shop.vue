@@ -6,7 +6,7 @@
     </div>
     <div class="top-tool-wrap">
       <div class="right-handle-box">
-        <el-input class="searchText"  v-model="search"  placeholder="请输入查询条件" clearable></el-input>
+        <el-input class="searchText"  v-model="search"  placeholder="请输入门店编号或门店名称" clearable></el-input>
         <el-button class="searchBtn" size="medium" type="primary" icon="el-icon-search" @click="getData">
           <span style="font-size: 12px">查询</span>
         </el-button>
@@ -58,7 +58,7 @@
       </el-dialog>
 
       <!-- 编辑弹出框 -->
-      <el-dialog title="编辑" :visible.sync="editVisible" width="600px">
+      <el-dialog title="门店信息编辑" :visible.sync="editVisible" width="600px">
         <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="门店编号">
             <el-input v-model="form.MUCODE" clearable :disabled="true"></el-input>
@@ -377,7 +377,7 @@
     background: #fafafa;
     text-align: left;
     display: flex;
-    padding: 10px 20px;
+    padding: 10px 0px;
     font-size: 14px;
   }
   .handle-content-select {
@@ -388,7 +388,7 @@
     margin: 10px 0 0 20px;
   }
   .searchText {
-    width: 200px !important;
+    width: 220px !important;
     margin: 0 10px;
   }
   .searchBtn {
